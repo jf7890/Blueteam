@@ -1,0 +1,7 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+# Install CPU-only PyTorch first so sentence-transformers does not pull
+# the large CUDA-enabled wheels on Linux servers.
+torch==2.5.1+cpu ; platform_system == "Linux"
+
+-r requirements.txt

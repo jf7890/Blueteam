@@ -1,0 +1,122 @@
+##############################################################################
+# Docker Compose – BlueAgent WAF (Full Stack)
+#
+# Services:
+#   redis        – Verdict cache & batch queue (internal only)
+#   blueteam-agent – Flask API + LangGraph pipeline + batch worker
+#   http-ingest  – Mirror traffic receiver → forwards to blueteam-agent
+#
+# Usage:
+#   docker compose up -d
+#
+# Reads variables from `.env` in the same directory (via ${VAR:-default} syntax).
+##############################################################################
+
+services:
+  # -------------------------------------------------------------------------
+  # Redis – verdict cache & batch queue (no exposed ports)
+  # -------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: waf-redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # -------------------------------------------------------------------------
+  # BlueAgent WAF – Flask API server (no exposed ports)
+  # -------------------------------------------------------------------------
+  blueteam-agent:
+    image: hnquangit/blueteam-agent:latest
+    container_name: waf-blueteam-agent
+    restart: unless-stopped
+    environment:
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      QDRANT_URL: ${QDRANT_URL:-http://localhost:6333}
+      QDRANT_API_KEY: ${QDRANT_API_KEY:-}
+      QDRANT_COLLECTION: ${QDRANT_COLLECTION:-waf_payloads}
+      QDRANT_DENSE_VECTOR_NAME: ${QDRANT_DENSE_VECTOR_NAME:-dense}
+      QDRANT_SPARSE_VECTOR_NAME: ${QDRANT_SPARSE_VECTOR_NAME:-sparse}
+      RAG_DENSE_MODEL: ${RAG_DENSE_MODEL:-jinaai/jina-embeddings-v2-base-code}
+      APP_PORT: ${APP_PORT:-5000}
+      SQLITE_DB_PATH: ${SQLITE_DB_PATH:-data/copilot_data.db}
+      SIEM_LOG_PATH: ${SIEM_LOG_PATH:-logs/ai_alerts.jsonl}
+      BATCH_MAX_SIZE: ${BATCH_MAX_SIZE:-20}
+      BATCH_WINDOW_SECONDS: ${BATCH_WINDOW_SECONDS:-10.0}
+      BATCH_QUEUE_KEY: ${BATCH_QUEUE_KEY:-waf:queue:llm_analysis}
+      BATCH_DLQ_KEY: ${BATCH_DLQ_KEY:-waf:queue:llm_analysis_dlq}
+      BATCH_RESULT_TTL: ${BATCH_RESULT_TTL:-3600}
+    volumes:
+      - agent_data:/app/data
+      - ${LOG_DIR:-./logs}:/app/logs
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:5000/api/docs')\" || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+
+  # -------------------------------------------------------------------------
+  # Batch Worker – async LLM analysis consumer (same image, different CMD)
+  # -------------------------------------------------------------------------
+  batch-worker:
+    image: hnquangit/blueteam-agent:latest
+    container_name: waf-batch-worker
+    restart: unless-stopped
+    environment:
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      QDRANT_URL: ${QDRANT_URL:-http://localhost:6333}
+      QDRANT_API_KEY: ${QDRANT_API_KEY:-}
+      QDRANT_COLLECTION: ${QDRANT_COLLECTION:-waf_payloads}
+      QDRANT_DENSE_VECTOR_NAME: ${QDRANT_DENSE_VECTOR_NAME:-dense}
+      QDRANT_SPARSE_VECTOR_NAME: ${QDRANT_SPARSE_VECTOR_NAME:-sparse}
+      RAG_DENSE_MODEL: ${RAG_DENSE_MODEL:-jinaai/jina-embeddings-v2-base-code}
+      BATCH_MAX_SIZE: ${BATCH_MAX_SIZE:-20}
+      BATCH_WINDOW_SECONDS: ${BATCH_WINDOW_SECONDS:-10.0}
+      BATCH_QUEUE_KEY: ${BATCH_QUEUE_KEY:-waf:queue:llm_analysis}
+      BATCH_DLQ_KEY: ${BATCH_DLQ_KEY:-waf:queue:llm_analysis_dlq}
+      BATCH_RESULT_TTL: ${BATCH_RESULT_TTL:-3600}
+    volumes:
+      - agent_data:/app/data
+      - ${LOG_DIR:-./logs}:/app/logs
+    depends_on:
+      redis:
+        condition: service_healthy
+      blueteam-agent:
+        condition: service_healthy
+    command: ["python", "-m", "workers.batch_processor"]
+
+  # -------------------------------------------------------------------------
+  # http.ingest – Mirror traffic receiver (only exposed service)
+  # -------------------------------------------------------------------------
+  http-ingest:
+    image: hnquangit/http.ingest:latest
+    container_name: waf-http-ingest
+    restart: unless-stopped
+    ports:
+      - "${INGEST_PORT:-60085}:9002"
+    environment:
+      PORT: "${INGEST_INTERNAL_PORT:-9002}"
+      AI_URL: ${AI_URL:-http://blueteam-agent:5000/api/analyze}
+    depends_on:
+      blueteam-agent:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:9002/healthz || exit 1"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+
+volumes:
+  redis_data:
+  agent_data:

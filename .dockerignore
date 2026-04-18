@@ -1,0 +1,16 @@
+.venv/
+.git/
+.github/
+.vscode/
+__pycache__/
+*.pyc
+.env
+.env.example
+data/
+logs/
+scripts/
+Dockerfile
+docker-compose*.yaml
+*.md
+http.ingest/
+qdrant_collection_builder/

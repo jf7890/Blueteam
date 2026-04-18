@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlueAgent WAF Console</title>
+    <style>
+        :root {
+            --bg: #08121b;
+            --surface: rgba(14, 26, 38, 0.92);
+            --surface-strong: rgba(18, 34, 48, 0.96);
+            --surface-soft: rgba(9, 18, 27, 0.82);
+            --border: #21384b;
+            --border-strong: #33546f;
+            --primary: #58a6ff;
+            --primary-strong: #2f79d9;
+            --accent: #60d6c4;
+            --danger: #ff6b6b;
+            --safe: #39d98a;
+            --warning: #f6bd60;
+            --text: #ecf4fb;
+            --muted: #95a9bc;
+            --shadow: 0 22px 46px rgba(0, 0, 0, 0.26);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { color-scheme: dark; }
+
+        body {
+            min-height: 100vh;
+            padding: 18px;
+            font-family: "IBM Plex Sans", "Aptos", "Segoe UI", sans-serif;
+            background:
+                radial-gradient(circle at 0% 0%, rgba(88, 166, 255, 0.14), transparent 28%),
+                radial-gradient(circle at 100% 0%, rgba(96, 214, 196, 0.10), transparent 24%),
+                linear-gradient(180deg, #071018 0%, #0a141d 100%);
+            color: var(--text);
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            background-size: 28px 28px;
+            mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.42), transparent 90%);
+        }
+
+        h1 {
+            font-family: "Aptos Display", "Bahnschrift", "IBM Plex Sans", sans-serif;
+            font-size: clamp(2rem, 3vw, 3rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.08;
+        }
+
+        .subtitle {
+            max-width: 920px;
+            margin: 8px 0 14px;
+            color: var(--muted);
+            font-size: 0.94rem;
+            line-height: 1.55;
+        }
+
+        .tab-bar {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+            width: 100%;
+            margin-bottom: 16px;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: var(--surface-soft);
+            box-shadow: var(--shadow);
+            position: relative;
+            z-index: 1;
+        }
+
+        .tab-btn {
+            padding: 11px 14px;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            background: transparent;
+            color: var(--muted);
+            font-size: 0.88rem;
+            font-weight: 650;
+            letter-spacing: 0.01em;
+            cursor: pointer;
+            transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+            text-align: center;
+        }
+
+        .tab-btn:hover {
+            color: var(--text);
+            border-color: rgba(88, 166, 255, 0.2);
+            background: rgba(88, 166, 255, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .tab-btn.active {
+            color: var(--text);
+            border-color: rgba(88, 166, 255, 0.3);
+            background: linear-gradient(180deg, rgba(88, 166, 255, 0.18), rgba(88, 166, 255, 0.06));
+        }
+
+        .tab-panel { display: none; width: 100%; position: relative; z-index: 1; }
+        .tab-panel.active { display: block; }
+
+        .container { display: grid; gap: 16px; width: 100%; }
+        #tab-test .container { grid-template-columns: minmax(240px, 290px) minmax(500px, 1.55fr) minmax(320px, 0.95fr); align-items: start; }
+
+        .card {
+            background:
+                linear-gradient(180deg, rgba(19, 36, 51, 0.96), rgba(10, 20, 29, 0.95)),
+                var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .card h2 {
+            font-size: 0.92rem;
+            font-weight: 650;
+            margin-bottom: 0.8rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+
+        label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 0.35rem;
+            letter-spacing: 0.02em;
+        }
+
+        textarea,
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(6, 14, 22, 0.92);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            font-family: "JetBrains Mono", "Cascadia Code", monospace;
+            font-size: 0.8rem;
+            line-height: 1.55;
+            outline: none;
+            resize: vertical;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        textarea {
+            min-height: 420px;
+        }
+
+        textarea:focus,
+        input[type="text"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(88, 166, 255, 0.1);
+        }
+
+        .hint {
+            margin-top: 8px;
+            font-size: 0.74rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .btn-primary {
+            width: 100%;
+            min-height: 42px;
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: linear-gradient(180deg, var(--primary), var(--primary-strong));
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            font-weight: 650;
+            cursor: pointer;
+            transition: transform 0.18s ease, opacity 0.18s ease;
+        }
+
+        .btn-primary:hover { opacity: 0.95; transform: translateY(-1px); }
+        .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+        .result-panel { display: block; min-height: 100%; }
+
+        .verdict-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 11px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .verdict-badge.malicious { background: rgba(255, 107, 107, 0.14); color: var(--danger); border: 1px solid rgba(255, 107, 107, 0.45); }
+        .verdict-badge.benign    { background: rgba(57, 217, 138, 0.12); color: var(--safe); border: 1px solid rgba(57, 217, 138, 0.35); }
+        .verdict-badge.pending   { background: rgba(246, 189, 96, 0.14); color: var(--warning); border: 1px solid rgba(246, 189, 96, 0.42); }
+        .verdict-badge.error     { background: rgba(255, 107, 107, 0.12); color: var(--danger); border: 1px solid rgba(255, 107, 107, 0.42); }
+
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(246, 189, 96, 0.24);
+            border-top-color: var(--warning);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .result-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+            font-size: 0.82rem;
+            line-height: 1.55;
+        }
+
+        .result-meta .meta-card {
+            min-height: 72px;
+            padding: 12px 14px;
+            border: 1px solid rgba(88, 166, 255, 0.14);
+            border-radius: 12px;
+            background: rgba(6, 14, 22, 0.6);
+        }
+
+        .result-meta .key {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--muted);
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        pre.raw-json {
+            margin-top: 12px;
+            background: rgba(5, 12, 18, 0.95);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 0.75rem;
+            line-height: 1.55;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            color: #d3e3f2;
+        }
+
+        .error-msg { color: var(--danger); font-size: 0.92rem; }
+
+        .presets {
+            display: grid;
+            gap: 8px;
+        }
+
+        .presets button {
+            padding: 11px 12px;
+            background: rgba(8, 18, 27, 0.84);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+        }
+
+        .presets button:hover {
+            transform: translateY(-1px);
+            border-color: rgba(88, 166, 255, 0.26);
+            background: rgba(88, 166, 255, 0.08);
+        }
+
+        .log-toolbar {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .log-toolbar button {
+            min-height: 38px;
+            padding: 8px 12px;
+            background: rgba(8, 18, 27, 0.85);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 650;
+            cursor: pointer;
+            transition: transform 0.18s ease, border-color 0.18s ease;
+        }
+
+        .log-toolbar button:hover {
+            transform: translateY(-1px);
+            border-color: rgba(88, 166, 255, 0.24);
+        }
+
+        .log-toolbar span {
+            display: inline-flex;
+            align-items: center;
+            min-height: 34px;
+            padding: 6px 10px;
+            border: 1px solid rgba(96, 214, 196, 0.2);
+            border-radius: 999px;
+            background: rgba(96, 214, 196, 0.08);
+            color: var(--muted);
+            font-size: 0.72rem;
+            font-weight: 650;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .table-wrap {
+            overflow: auto;
+            border: 1px solid rgba(49, 80, 106, 0.26);
+            border-radius: 16px;
+            background: rgba(5, 12, 18, 0.64);
+        }
+
+        table.alert-table {
+            width: 100%;
+            min-width: 980px;
+            border-collapse: collapse;
+            font-size: 0.78rem;
+        }
+
+        table.alert-table th {
+            position: sticky;
+            top: 0;
+            background: rgba(12, 23, 34, 0.98);
+            color: var(--muted);
+            text-align: left;
+            padding: 11px 10px;
+            border-bottom: 1px solid var(--border-strong);
+            text-transform: uppercase;
+            font-size: 0.68rem;
+            letter-spacing: 0.09em;
+        }
+
+        table.alert-table td {
+            padding: 10px 10px;
+            border-bottom: 1px solid rgba(33, 56, 75, 0.92);
+            white-space: nowrap;
+            max-width: 220px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            vertical-align: top;
+        }
+
+        table.alert-table tr:hover td { background: rgba(88, 166, 255, 0.06); }
+
+        .sev-critical { color: var(--danger); font-weight: 700; }
+        .sev-high     { color: #ff9b5e; font-weight: 650; }
+        .sev-medium   { color: var(--warning); font-weight: 600; }
+        .sev-low      { color: #74c0fc; }
+        .sev-info     { color: var(--muted); }
+
+        .empty-state {
+            text-align: center;
+            padding: 32px 16px;
+            color: var(--muted);
+            line-height: 1.55;
+        }
+
+        .expand-btn {
+            background: rgba(88, 166, 255, 0.08);
+            border: 1px solid rgba(88, 166, 255, 0.2);
+            border-radius: 8px;
+            color: var(--text);
+            padding: 6px 10px;
+            font-size: 0.72rem;
+            font-weight: 650;
+            cursor: pointer;
+            transition: transform 0.18s ease, border-color 0.18s ease;
+        }
+
+        .expand-btn:hover { transform: translateY(-1px); border-color: rgba(88, 166, 255, 0.32); }
+
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 310px);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            padding: 14px;
+            margin-top: 4px;
+            border: 1px solid rgba(49, 80, 106, 0.22);
+            border-radius: 14px;
+            background: rgba(6, 14, 22, 0.66);
+        }
+
+        .chat-msg {
+            max-width: min(900px, 86%);
+            padding: 11px 13px;
+            border-radius: 14px;
+            font-size: 0.84rem;
+            line-height: 1.6;
+            word-break: break-word;
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.16);
+        }
+
+        .chat-msg.user {
+            align-self: flex-end;
+            background: linear-gradient(180deg, rgba(88, 166, 255, 0.22), rgba(47, 121, 217, 0.16));
+            border: 1px solid rgba(88, 166, 255, 0.32);
+            color: #f8fbff;
+        }
+
+        .chat-msg.assistant {
+            align-self: flex-start;
+            background: var(--surface-strong);
+            border: 1px solid rgba(49, 80, 106, 0.42);
+            border-bottom-left-radius: 8px;
+        }
+
+        .chat-meta {
+            margin-bottom: 6px;
+            color: var(--muted);
+            font-size: 0.66rem;
+            font-weight: 650;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .chat-msg.assistant h1,
+        .chat-msg.assistant h2,
+        .chat-msg.assistant h3,
+        .chat-msg.assistant h4 { line-height: 1.3; letter-spacing: -0.02em; }
+        .chat-msg.assistant h1 { font-size: 1.08rem; }
+        .chat-msg.assistant h2 { font-size: 0.98rem; }
+        .chat-msg.assistant h3,
+        .chat-msg.assistant h4 { font-size: 0.9rem; }
+        .chat-msg.assistant p + p,
+        .chat-msg.assistant p + ul,
+        .chat-msg.assistant p + ol,
+        .chat-msg.assistant ul + p,
+        .chat-msg.assistant ol + p,
+        .chat-msg.assistant pre + p,
+        .chat-msg.assistant blockquote + p { margin-top: 0.8em; }
+
+        .chat-msg.assistant ul,
+        .chat-msg.assistant ol {
+            padding-left: 1.25rem;
+        }
+
+        .chat-msg.assistant li + li { margin-top: 0.35rem; }
+
+        .chat-msg.assistant blockquote {
+            padding: 10px 12px;
+            border-left: 3px solid var(--accent);
+            border-radius: 0 10px 10px 0;
+            background: rgba(96, 214, 196, 0.08);
+            color: #d5ede8;
+        }
+
+        .chat-msg.assistant pre {
+            background: rgba(5, 12, 18, 0.95);
+            border: 1px solid rgba(49, 80, 106, 0.34);
+            border-radius: 10px;
+            padding: 10px 12px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+
+        .chat-msg.assistant code {
+            background: rgba(6, 14, 22, 0.88);
+            border: 1px solid rgba(88, 166, 255, 0.14);
+            padding: 0.12rem 0.38rem;
+            border-radius: 6px;
+            font-size: 0.84em;
+        }
+
+        .chat-msg.assistant a {
+            color: #8fd0ff;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(143, 208, 255, 0.25);
+        }
+
+        .chat-input-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .chat-input-row input {
+            font-family: "IBM Plex Sans", "Aptos", "Segoe UI", sans-serif;
+            font-size: 0.86rem;
+        }
+
+        .chat-input-row button {
+            min-width: 108px;
+            white-space: nowrap;
+        }
+
+        .chat-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .chat-controls span {
+            display: inline-flex;
+            align-items: center;
+            min-height: 32px;
+            padding: 6px 10px;
+            border: 1px solid rgba(96, 214, 196, 0.2);
+            border-radius: 999px;
+            background: rgba(96, 214, 196, 0.08);
+            color: var(--muted);
+            font-size: 0.7rem;
+            font-weight: 650;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .chat-controls button {
+            min-height: 36px;
+            padding: 8px 12px;
+            background: rgba(8, 18, 27, 0.84);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 0.78rem;
+            font-weight: 650;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 7, 12, 0.74);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 18px;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-overlay.visible { display: flex; }
+
+        .modal-box {
+            background: linear-gradient(180deg, rgba(19, 36, 51, 0.98), rgba(10, 20, 29, 0.98));
+            border: 1px solid var(--border-strong);
+            border-radius: 16px;
+            padding: 16px;
+            width: min(1200px, 100%);
+            max-height: 88vh;
+            overflow-y: auto;
+            box-shadow: 0 32px 70px rgba(0, 0, 0, 0.42);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .modal-box h3 {
+            margin-bottom: 0;
+            font-size: 1.08rem;
+            letter-spacing: -0.03em;
+        }
+
+        .modal-close {
+            background: rgba(8, 18, 27, 0.84);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 0.78rem;
+            font-weight: 650;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        .modal-close:hover { border-color: rgba(88, 166, 255, 0.24); }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+        }
+
+        .detail-item {
+            min-height: 72px;
+            padding: 11px 13px;
+            border: 1px solid rgba(88, 166, 255, 0.14);
+            border-radius: 12px;
+            background: rgba(6, 14, 22, 0.6);
+        }
+
+        .detail-item .label {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--muted);
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .detail-item .value {
+            font-size: 0.82rem;
+            line-height: 1.45;
+            word-break: break-word;
+        }
+
+        @media (max-width: 1320px) {
+            #tab-test .container {
+                grid-template-columns: minmax(240px, 280px) minmax(0, 1fr);
+            }
+
+            .result-panel {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 1080px) {
+            body { padding: 14px; }
+            .tab-bar { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 860px) {
+            #tab-test .container { grid-template-columns: 1fr; }
+            textarea { min-height: 320px; }
+            .chat-container { min-height: 64vh; }
+            .chat-msg { max-width: 100%; }
+            .chat-input-row { grid-template-columns: 1fr; }
+            .card, .modal-box { padding: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<h1>BlueAgent WAF Console</h1>
+<p class="subtitle">
+    Full-width workspace for request testing, historical alert review, and SOC Copilot investigations.
+</p>
+
+<!-- ===== Tab bar ===== -->
+<div class="tab-bar">
+    <button class="tab-btn active" data-tab="test" onclick="switchTab('test')">Request Lab</button>
+    <button class="tab-btn" data-tab="logs" onclick="switchTab('logs')">Alert Log Viewer</button>
+    <button class="tab-btn" data-tab="copilot" onclick="switchTab('copilot')">SOC Copilot</button>
+</div>
+
+<!-- ===================================================================== -->
+<!-- TAB 1: Test Request (existing logic, unchanged)                       -->
+<!-- ===================================================================== -->
+<div id="tab-test" class="tab-panel active">
+    <div class="container">
+        <div class="card">
+            <h2>Quick Test Presets</h2>
+            <div class="presets">
+                <button onclick="loadPreset('xss')">Cross-Site Scripting</button>
+                <button onclick="loadPreset('sqli')">SQL Injection</button>
+                <button onclick="loadPreset('traversal')">Path Traversal</button>
+                <button onclick="loadPreset('cmdi')">Command Injection</button>
+                <button onclick="loadPreset('benign')">Benign Request</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Raw HTTP Request</h2>
+            <label for="raw-http">Paste a full HTTP request below</label>
+            <textarea id="raw-http" rows="14" spellcheck="false"
+                placeholder="GET /path?param=value HTTP/1.1&#10;Host: example.com&#10;User-Agent: Mozilla/5.0&#10;Accept: text/html&#10;&#10;optional body here"></textarea>
+            <p class="hint">
+                Format: <code>METHOD /path HTTP/1.1</code>, then headers (one per line),
+                then a blank line, then the optional body.
+                Identical to what you'd see in Burp Suite, OWASP ZAP, or curl <code>--trace</code>.
+            </p>
+            <button id="submit-btn" class="btn-primary" onclick="analyzeRequest()">Analyze Request</button>
+        </div>
+
+        <div class="card result-panel" id="result-panel">
+            <h2>Analysis Result</h2>
+            <div id="result-content">
+                <div class="empty-state">Submit a request to inspect the verdict, confidence, and raw response payload.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===================================================================== -->
+<!-- TAB 2: Log Viewer                                                     -->
+<!-- ===================================================================== -->
+<div id="tab-logs" class="tab-panel">
+    <div class="container">
+        <div class="card">
+            <h2>Historical Alert Logs</h2>
+            <div class="log-toolbar">
+                <button onclick="loadAlerts()">Refresh Logs</button>
+                <span id="log-count"></span>
+            </div>
+            <div class="table-wrap" id="log-table-wrap">
+                <div class="empty-state" id="log-empty">Click <b>Refresh</b> to load alerts from the database.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===================================================================== -->
+<!-- TAB 3: SOC Copilot                                                    -->
+<!-- ===================================================================== -->
+<div id="tab-copilot" class="tab-panel">
+    <div class="container">
+        <div class="card chat-container">
+            <h2>SOC Copilot Chat</h2>
+            <div class="chat-controls">
+                <span>Local history enabled</span>
+                <button type="button" onclick="clearChatHistory()">Clear History</button>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+            </div>
+            <div class="chat-input-row">
+                <input id="chat-input" type="text" placeholder="Ask about recent attacks, mitigation rules…"
+                    onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendCopilotMsg();}">
+                <button id="chat-send-btn" onclick="sendCopilotMsg()">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Detail modal -->
+<div class="modal-overlay" id="detail-modal" onclick="if(event.target===this)closeModal();">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3>Alert Detail</h3>
+            <button class="modal-close" onclick="closeModal()">Close</button>
+        </div>
+        <div class="detail-grid" id="modal-summary"></div>
+        <pre class="raw-json" id="modal-json"></pre>
+    </div>
+</div>
+
+<!-- ================================================================= -->
+<!-- Scripts                                                            -->
+<!-- ================================================================= -->
+<script>
+/* ---------- Tab switching ---------- */
+function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach((b) => {
+        b.classList.toggle('active', b.dataset.tab === name);
+    });
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+
+    if (name === 'logs') loadAlerts();
+}
+
+/* ---------- Tab 1: Test Request (unchanged logic) ---------- */
+const PRESETS = {
+    xss: [
+        'GET /search?q=%3Cscript%3Ealert(document.cookie)%3C%2Fscript%3E HTTP/1.1',
+        'Host: example.com',
+        'User-Agent: Mozilla/5.0',
+        'Accept: text/html',
+    ].join('\n'),
+    sqli: [
+        'POST /login HTTP/1.1',
+        'Host: example.com',
+        'Content-Type: application/x-www-form-urlencoded',
+        'Content-Length: 44',
+        '',
+        "username=admin' OR 1=1 --&password=anything",
+    ].join('\n'),
+    traversal: [
+        'GET /files?path=../../../../etc/passwd HTTP/1.1',
+        'Host: example.com',
+        'User-Agent: Mozilla/5.0',
+        'Accept: */*',
+    ].join('\n'),
+    cmdi: [
+        'GET /ping?host=127.0.0.1;cat%20/etc/shadow HTTP/1.1',
+        'Host: example.com',
+        'User-Agent: curl/8.0',
+        'Accept: */*',
+    ].join('\n'),
+    benign: [
+        'GET /api/products?page=1&limit=20 HTTP/1.1',
+        'Host: example.com',
+        'User-Agent: Mozilla/5.0',
+        'Accept: application/json',
+    ].join('\n'),
+};
+
+let pollTimer = null;
+let alertsCache = [];
+let chatHistory = [];
+const CHAT_STORAGE_KEY = 'blueagent.copilot.history.v1';
+const DEFAULT_COPILOT_MESSAGE = [
+    'I am your SOC Copilot.',
+    '',
+    'You can ask me to:',
+    '- summarize recent WAF activity',
+    '- investigate a suspicious payload',
+    '- suggest ModSecurity, Nginx, or iptables mitigations',
+].join('\n');
+
+function loadPreset(name) {
+    const p = PRESETS[name];
+    if (p) document.getElementById('raw-http').value = p;
+}
+
+function escapeHtml(str) {
+    return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function formatChatTime(value) {
+    const date = value ? new Date(value) : new Date();
+    if (Number.isNaN(date.getTime())) return '';
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+function renderMetaCard(label, value) {
+    return `<div class="meta-card"><span class="key">${escapeHtml(label)}</span>${escapeHtml(value || '—')}</div>`;
+}
+
+function renderVerdict(r, rawData) {
+    const verdict = r.verdict || 'unknown';
+    let badgeClass = 'benign';
+    if (verdict === 'malicious') badgeClass = 'malicious';
+    else if (verdict === 'pending') badgeClass = 'pending';
+    else if (verdict === 'error') badgeClass = 'error';
+
+    let html = `<span class="verdict-badge ${badgeClass}">${escapeHtml(verdict)}</span>`;
+    html += '<div class="result-meta">';
+    html += renderMetaCard('Source', r.source || '\u2014');
+    html += renderMetaCard('Confidence', r.confidence != null ? `${(r.confidence * 100).toFixed(1)}%` : '\u2014');
+    html += renderMetaCard('Attack Type', r.attack_type || '\u2014');
+    html += renderMetaCard('Matched Rule', r.matched_rule || '\u2014');
+    html += renderMetaCard('Request ID', r.request_id || '\u2014');
+    html += renderMetaCard('Status', r.message || 'Complete');
+    html += '</div>';
+    if (r.reasoning) {
+        html += `<pre class="raw-json">${escapeHtml(r.reasoning)}</pre>`;
+    }
+    html += `<pre class="raw-json">${escapeHtml(JSON.stringify(rawData, null, 2))}</pre>`;
+    return html;
+}
+
+function showPending(requestId) {
+    const content = document.getElementById('result-content');
+    content.innerHTML =
+        `<span class="verdict-badge pending"><span class="spinner"></span>PENDING</span>` +
+        `<div class="result-meta">` +
+        renderMetaCard('Request ID', requestId) +
+        renderMetaCard('Status', 'Queued for batch LLM analysis and polling for result') +
+        renderMetaCard('Worker', 'python -m workers.batch_processor') +
+        `</div>`;
+}
+
+async function pollForResult(requestId) {
+    const content = document.getElementById('result-content');
+    const btn = document.getElementById('submit-btn');
+    let attempts = 0;
+    const maxAttempts = 60;
+    const intervalMs = 1000;
+
+    showPending(requestId);
+
+    pollTimer = setInterval(async () => {
+        attempts++;
+        try {
+            const resp = await fetch(`/api/result/${encodeURIComponent(requestId)}`);
+            const data = await resp.json();
+            if (resp.status === 200 && data.success) {
+                clearInterval(pollTimer); pollTimer = null;
+                content.innerHTML = renderVerdict(data.result, data);
+                btn.disabled = false; btn.textContent = 'Analyze Request';
+                return;
+            }
+        } catch (_) {}
+        if (attempts >= maxAttempts) {
+            clearInterval(pollTimer); pollTimer = null;
+            content.innerHTML =
+                `<span class="verdict-badge error">TIMEOUT</span>` +
+                `<div class="result-meta">` +
+                renderMetaCard('Request ID', requestId) +
+                renderMetaCard('Status', `No result returned within ${maxAttempts}s`) +
+                renderMetaCard('Next Step', 'Verify the batch worker is running') +
+                `</div><pre class="raw-json">python -m workers.batch_processor</pre>`;
+            btn.disabled = false; btn.textContent = 'Analyze Request';
+        }
+    }, intervalMs);
+}
+
+async function analyzeRequest() {
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+
+    const btn = document.getElementById('submit-btn');
+    const content = document.getElementById('result-content');
+    const rawHttp = document.getElementById('raw-http').value.trim();
+
+    if (!rawHttp) {
+        content.innerHTML = '<div class="empty-state error-msg">Please enter a raw HTTP request.</div>';
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Analyzing\u2026';
+    content.innerHTML = '<div class="empty-state">Submitting request to the analysis pipeline...</div>';
+
+    try {
+        const resp = await fetch('/api/analyze', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ raw_http: rawHttp })
+        });
+        const data = await resp.json();
+
+        if (data.success && data.result) {
+            const r = data.result;
+            if (resp.status === 202 && r.verdict === 'pending' && r.request_id) {
+                await pollForResult(r.request_id);
+                return;
+            }
+            content.innerHTML = renderVerdict(r, data);
+        } else {
+            content.innerHTML = `<div class="empty-state error-msg">${escapeHtml(data.error || 'Unknown error')}</div>
+                <pre class="raw-json">${escapeHtml(JSON.stringify(data, null, 2))}</pre>`;
+        }
+    } catch (err) {
+        content.innerHTML = `<div class="empty-state error-msg">Request failed: ${escapeHtml(err.message)}</div>`;
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Analyze Request';
+}
+
+/* ---------- Tab 2: Log Viewer ---------- */
+function shortId(value) {
+    const text = String(value || '');
+    if (!text) return '—';
+    if (text.length <= 18) return text;
+    return `${text.slice(0, 12)}...${text.slice(-4)}`;
+}
+
+function parseNestedJson(value, maxDepth = 3) {
+    let current = value;
+    for (let depth = 0; depth < maxDepth; depth++) {
+        if (typeof current !== 'string') break;
+        const trimmed = current.trim();
+        if (!trimmed) return '';
+        if (!(trimmed.startsWith('{') || trimmed.startsWith('[') || trimmed.startsWith('"'))) break;
+        try {
+            current = JSON.parse(trimmed);
+        } catch {
+            break;
+        }
+    }
+    return current;
+}
+
+function renderDetailItem(label, value) {
+    return `<div class="detail-item"><span class="label">${escapeHtml(label)}</span><div class="value">${escapeHtml(value || '—')}</div></div>`;
+}
+
+async function loadAlerts() {
+    const wrap = document.getElementById('log-table-wrap');
+    const countEl = document.getElementById('log-count');
+    wrap.innerHTML = '<div class="empty-state">Loading…</div>';
+
+    try {
+        const resp = await fetch('/api/alerts?limit=200');
+        const data = await resp.json();
+
+        if (!data.success || !data.alerts || data.alerts.length === 0) {
+            alertsCache = [];
+            wrap.innerHTML = '<div class="empty-state">No alerts found in the database.</div>';
+            countEl.textContent = '0 rows';
+            return;
+        }
+
+        alertsCache = data.alerts;
+        countEl.textContent = `${alertsCache.length} row(s)`;
+
+        let html = '<table class="alert-table"><thead><tr>' +
+            '<th>#</th><th>Timestamp</th><th>Source IP</th><th>Verdict</th>' +
+            '<th>Attack Type</th><th>Severity</th><th>Request ID</th><th></th>' +
+            '</tr></thead><tbody>';
+
+        alertsCache.forEach((a, i) => {
+            const mal = a.is_malicious ? 1 : 0;
+            const verdict = mal ? 'malicious' : 'benign';
+            const sevClass = 'sev-' + (a.severity || 'info').toLowerCase();
+            const ts = (a.timestamp || '').replace('T', ' ').slice(0, 19);
+            const reqId = shortId(a.request_id || '');
+
+            html += `<tr>` +
+                `<td>${a.id || i + 1}</td>` +
+                `<td>${escapeHtml(ts)}</td>` +
+                `<td>${escapeHtml(a.source_ip || 'unknown')}</td>` +
+                `<td><span class="verdict-badge ${verdict}" style="font-size:0.72rem;padding:0.15rem 0.55rem;">${verdict}</span></td>` +
+                `<td>${escapeHtml(a.attack_type || '—')}</td>` +
+                `<td class="${sevClass}">${escapeHtml((a.severity || 'info').toUpperCase())}</td>` +
+                `<td title="${escapeHtml(a.request_id || '')}">${escapeHtml(reqId)}</td>` +
+                `<td><button class="expand-btn" type="button" onclick="showDetail(${i})">Open Detail</button></td>` +
+                `</tr>`;
+        });
+
+        html += '</tbody></table>';
+        wrap.innerHTML = html;
+
+    } catch (err) {
+        wrap.innerHTML = `<div class="empty-state error-msg">Failed to load alerts: ${escapeHtml(err.message)}</div>`;
+    }
+}
+
+function showDetail(index) {
+    const record = alertsCache[index];
+    if (!record) return;
+
+    const parsed = parseNestedJson(record.full_context || '{}');
+    const context = parsed && typeof parsed === 'object' ? parsed : {};
+    const summary = document.getElementById('modal-summary');
+
+    summary.innerHTML =
+        renderDetailItem('Request ID', context.request_id || record.request_id || '—') +
+        renderDetailItem('Verdict', context.verdict || (record.is_malicious ? 'malicious' : 'benign')) +
+        renderDetailItem('Severity', context.ai_analysis?.severity || record.severity || 'info') +
+        renderDetailItem('Attack Type', context.ai_analysis?.attack_type || record.attack_type || '—') +
+        renderDetailItem('Source IP', context.network?.srcip || record.source_ip || 'unknown') +
+        renderDetailItem('Method', context.http?.method || 'UNKNOWN') +
+        renderDetailItem('URI', context.http?.uri || '—') +
+        renderDetailItem('Timestamp', context.timestamp || record.timestamp || '—');
+
+    document.getElementById('modal-json').textContent =
+        typeof parsed === 'string' ? parsed : JSON.stringify(parsed, null, 2);
+    document.getElementById('detail-modal').classList.add('visible');
+}
+
+function closeModal() {
+    document.getElementById('detail-modal').classList.remove('visible');
+    document.getElementById('modal-summary').innerHTML = '';
+}
+
+/* ---------- Tab 3: SOC Copilot ---------- */
+function saveChatHistory() {
+    try {
+        localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chatHistory));
+    } catch {}
+}
+
+function pushChatMessage(role, text, timestamp = new Date().toISOString()) {
+    chatHistory.push({ role, text, timestamp });
+    saveChatHistory();
+}
+
+function appendChatMsg(role, text, options = {}) {
+    const box = document.getElementById('chat-messages');
+    const div = document.createElement('div');
+    const meta = document.createElement('div');
+    const body = document.createElement('div');
+    const timestamp = options.timestamp || new Date().toISOString();
+    div.className = 'chat-msg ' + role;
+    meta.className = 'chat-meta';
+    body.className = 'chat-body';
+    meta.textContent = `${role === 'assistant' ? 'SOC Copilot' : 'You'} · ${formatChatTime(timestamp)}`;
+
+    if (role === 'assistant') {
+        body.innerHTML = renderMarkdown(text);
+    } else {
+        body.textContent = text;
+    }
+
+    div.appendChild(meta);
+    div.appendChild(body);
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+
+    if (options.persist !== false) {
+        pushChatMessage(role, text, timestamp);
+    }
+
+    return { wrapper: div, body, timestamp };
+}
+
+function renderMarkdown(md) {
+    const input = String(md ?? '').replace(/\r\n/g, '\n').trim();
+    if (!input) return '';
+
+    const codeBlocks = [];
+    let working = input.replace(/```([\w.+-]+)?\n([\s\S]*?)```/g, (_, lang = '', code) => {
+        const token = `@@CODE_BLOCK_${codeBlocks.length}@@`;
+        codeBlocks.push(`<pre><code>${escapeHtml(code.replace(/\n$/, ''))}</code></pre>`);
+        return token;
+    });
+
+    function formatInlineMarkdown(text) {
+        let html = escapeHtml(text);
+        html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+        html = html.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+        html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+        return html;
+    }
+
+    const lines = working.split('\n');
+    let html = '';
+    let paragraph = [];
+    let inUl = false;
+    let inOl = false;
+    let inQuote = false;
+
+    function flushParagraph() {
+        if (!paragraph.length) return;
+        html += `<p>${formatInlineMarkdown(paragraph.join(' '))}</p>`;
+        paragraph = [];
+    }
+
+    function closeLists() {
+        if (inUl) { html += '</ul>'; inUl = false; }
+        if (inOl) { html += '</ol>'; inOl = false; }
+    }
+
+    function closeQuote() {
+        if (!inQuote) return;
+        flushParagraph();
+        html += '</blockquote>';
+        inQuote = false;
+    }
+
+    function closeBlocks() {
+        flushParagraph();
+        closeLists();
+        closeQuote();
+    }
+
+    lines.forEach((rawLine) => {
+        const line = rawLine.trimEnd();
+        const codeMatch = line.match(/^@@CODE_BLOCK_(\d+)@@$/);
+        if (codeMatch) {
+            closeBlocks();
+            html += codeBlocks[Number(codeMatch[1])];
+            return;
+        }
+
+        if (!line.trim()) {
+            closeBlocks();
+            return;
+        }
+
+        const heading = line.match(/^(#{1,4})\s+(.*)$/);
+        if (heading) {
+            closeBlocks();
+            const level = heading[1].length;
+            html += `<h${level}>${formatInlineMarkdown(heading[2].trim())}</h${level}>`;
+            return;
+        }
+
+        const quote = line.match(/^>\s?(.*)$/);
+        if (quote) {
+            flushParagraph();
+            closeLists();
+            if (!inQuote) {
+                html += '<blockquote>';
+                inQuote = true;
+            }
+            paragraph.push(quote[1]);
+            return;
+        }
+
+        if (inQuote) closeQuote();
+
+        const unordered = line.match(/^[-*]\s+(.*)$/);
+        if (unordered) {
+            flushParagraph();
+            if (inOl) { html += '</ol>'; inOl = false; }
+            if (!inUl) {
+                html += '<ul>';
+                inUl = true;
+            }
+            html += `<li>${formatInlineMarkdown(unordered[1])}</li>`;
+            return;
+        }
+
+        const ordered = line.match(/^\d+\.\s+(.*)$/);
+        if (ordered) {
+            flushParagraph();
+            if (inUl) { html += '</ul>'; inUl = false; }
+            if (!inOl) {
+                html += '<ol>';
+                inOl = true;
+            }
+            html += `<li>${formatInlineMarkdown(ordered[1])}</li>`;
+            return;
+        }
+
+        closeLists();
+        paragraph.push(line.trim());
+    });
+
+    closeBlocks();
+    return html.replace(/@@CODE_BLOCK_(\d+)@@/g, (_, index) => codeBlocks[Number(index)] || '');
+}
+
+function restoreChatHistory() {
+    const box = document.getElementById('chat-messages');
+    box.innerHTML = '';
+
+    try {
+        const raw = localStorage.getItem(CHAT_STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        chatHistory = Array.isArray(parsed)
+            ? parsed.filter((item) => item && typeof item.role === 'string' && typeof item.text === 'string')
+            : [];
+    } catch {
+        chatHistory = [];
+    }
+
+    if (!chatHistory.length) {
+        chatHistory = [{ role: 'assistant', text: DEFAULT_COPILOT_MESSAGE, timestamp: new Date().toISOString() }];
+        saveChatHistory();
+    }
+
+    chatHistory.forEach((entry) => {
+        appendChatMsg(entry.role, entry.text, {
+            persist: false,
+            timestamp: entry.timestamp,
+        });
+    });
+}
+
+function clearChatHistory() {
+    chatHistory = [];
+    saveChatHistory();
+    restoreChatHistory();
+}
+
+async function sendCopilotMsg() {
+    const input = document.getElementById('chat-input');
+    const btn = document.getElementById('chat-send-btn');
+    const msg = input.value.trim();
+    if (!msg) return;
+
+    appendChatMsg('user', msg);
+    input.value = '';
+    btn.disabled = true;
+
+    const thinkingMsg = appendChatMsg('assistant', '*Thinking...*', { persist: false });
+
+    try {
+        const resp = await fetch('/api/copilot/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: msg })
+        });
+        const data = await resp.json();
+
+        if (data.success && data.reply) {
+            thinkingMsg.body.innerHTML = renderMarkdown(data.reply);
+            pushChatMessage('assistant', data.reply, thinkingMsg.timestamp);
+        } else {
+            const errorText = data.error || 'Unknown error';
+            thinkingMsg.body.innerHTML = `<p class="error-msg">${escapeHtml(errorText)}</p>`;
+            pushChatMessage('assistant', `Error: ${errorText}`, thinkingMsg.timestamp);
+        }
+    } catch (err) {
+        thinkingMsg.body.innerHTML = `<p class="error-msg">Request failed: ${escapeHtml(err.message)}</p>`;
+        pushChatMessage('assistant', `Request failed: ${err.message}`, thinkingMsg.timestamp);
+    }
+
+    btn.disabled = false;
+    document.getElementById('chat-messages').scrollTop = 999999;
+    input.focus();
+}
+
+restoreChatHistory();
+</script>
+</body>
+</html>
