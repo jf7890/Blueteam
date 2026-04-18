@@ -258,6 +258,10 @@ By default, the script follows the runtime retrieval path:
 - `gatekeeper`
 - `RAG`
 
+If `DEBUG=true`, the standalone benchmark also writes the same debug CSV shape
+used by the live service to `DEBUG_CSV_PATH`. This does not require `app.py`
+or the batch worker.
+
 ### Run with a local CSV
 
 ```bash

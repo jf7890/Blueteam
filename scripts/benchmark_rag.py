@@ -36,6 +36,7 @@ from benchmark_common import (  # noqa: E402
 from config.settings import settings  # noqa: E402
 from nodes.preprocess import preprocess_node  # noqa: E402
 from nodes.rag_node import collect_ranked_payload_hits  # noqa: E402
+from utils.debug_csv_logger import log_debug_snapshot  # noqa: E402
 from utils.security import normalise_payload  # noqa: E402
 
 
@@ -220,6 +221,25 @@ def _filter_with_gatekeeper(payloads: list[str]) -> list[str]:
     ]
 
 
+def _log_benchmark_debug(
+    sample: RetrievalSample,
+    normalized_payloads: list[str],
+    retrieval_payloads: list[str],
+    filtered_hits: list[dict[str, Any]],
+) -> None:
+    """Emit the same debug CSV snapshot shape used by the live service."""
+    log_debug_snapshot(
+        {
+            "raw_http_text": sample.query_text,
+            "normalized_payloads": normalized_payloads,
+            "suspicious_payloads": retrieval_payloads,
+            "rag_context": [str(hit.get("payload", "") or "") for hit in filtered_hits],
+        },
+        rag_query=retrieval_payloads,
+        rag_query_result=[str(hit.get("payload", "") or "") for hit in filtered_hits],
+    )
+
+
 def evaluate_sample(
     sample: RetrievalSample,
     top_k: int,
@@ -282,6 +302,12 @@ def evaluate_sample(
     ndcg = dcg / ideal_dcg if ideal_dcg else 0.0
 
     top_categories = ",".join(category or "Unknown" for category in normalized_categories[:3])
+    _log_benchmark_debug(
+        sample,
+        normalized_payloads,
+        retrieval_payloads,
+        filtered_hits,
+    )
     return RetrievalRecord(
         dataset_index=sample.dataset_index,
         sample_id=sample.sample_id,
@@ -377,6 +403,8 @@ def summarize_records(
             "benign_samples": args.benign_samples,
             "malicious_samples": args.malicious_samples,
             "use_gatekeeper": True,
+            "debug_enabled": settings.debug,
+            "debug_csv_path": settings.debug_csv_path,
             "rag_enabled": settings.rag_enabled,
             "qdrant_collection": settings.qdrant_collection,
             "shuffle": args.shuffle,
@@ -467,6 +495,7 @@ def print_summary(summary: dict[str, Any]) -> None:
     print(f"  Benign queries         : {counts['benign_samples']}")
     print(f"  Errors                 : {counts['errors']}")
     print(f"  Gatekeeper used        : {summary['config']['use_gatekeeper']}")
+    print(f"  Debug enabled          : {summary['config']['debug_enabled']}")
     print(f"  RAG enabled            : {summary['config']['rag_enabled']}")
     print(f"  Hit@{summary['config']['top_k']}           : {malicious['hit_at_k']:.4f}")
     print(f"  Precision@{summary['config']['top_k']}     : {malicious['precision_at_k']:.4f}")
@@ -474,6 +503,8 @@ def print_summary(summary: dict[str, Any]) -> None:
     print(f"  nDCG@{summary['config']['top_k']}          : {malicious['ndcg_at_k']:.4f}")
     print(f"  Benign context rate    : {benign['context_return_rate']:.4f}")
     print(f"  Benign mean top1 score : {benign['mean_top1_score']:.4f}")
+    if summary["config"]["debug_enabled"]:
+        print(f"  Debug CSV              : {summary['config']['debug_csv_path']}")
 
 
 def main() -> int:
