@@ -57,7 +57,9 @@ class RetrievalRecord:
     true_label: str
     true_attack_type: str | None
     payload_count: int
+    retrieval_payload_count: int
     normalized_payloads: str
+    retrieval_payloads: str
     top_k_returned: int
     top1_score: float | None
     relevant_hits: int
@@ -176,14 +178,19 @@ def load_retrieval_samples(args: argparse.Namespace) -> tuple[list[RetrievalSamp
     return samples, dataset_info
 
 
-def _prepare_payloads(sample: RetrievalSample) -> list[str]:
+def _prepare_payloads(sample: RetrievalSample) -> tuple[list[str], list[str]]:
     if sample.query_mode == "raw_http":
         state = preprocess_node({"raw_http_text": sample.query_text})
-        payloads = state.get("normalized_payloads", [])
-        return [payload for payload in payloads if payload]
+        normalized_payloads = [
+            payload for payload in state.get("normalized_payloads", []) if payload
+        ]
+        retrieval_payloads = _filter_with_gatekeeper(normalized_payloads)
+        return normalized_payloads, retrieval_payloads
 
     text = normalise_payload(sample.query_text)
-    return [text] if text else []
+    normalized_payloads = [text] if text else []
+    retrieval_payloads = _filter_with_gatekeeper(normalized_payloads)
+    return normalized_payloads, retrieval_payloads
 
 
 def _discounted_gain(relevance_flags: list[int]) -> float:
@@ -198,9 +205,28 @@ def _json_compact(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False, separators=(",", ":"))
 
 
-def evaluate_sample(sample: RetrievalSample, top_k: int, min_score: float) -> RetrievalRecord:
+def _filter_with_gatekeeper(payloads: list[str]) -> list[str]:
     try:
-        payloads = _prepare_payloads(sample)
+        from nodes.gatekeeper_node import gatekeeper_node  # noqa: E402
+    except ModuleNotFoundError as exc:
+        raise RuntimeError(
+            "Gatekeeper ML is required for benchmark_rag.py but is not installed. "
+            "Install the gatekeeper_ml dependency or run on the target server environment."
+        ) from exc
+
+    gatekeeper_state = gatekeeper_node({"normalized_payloads": payloads})
+    return [
+        payload for payload in gatekeeper_state.get("suspicious_payloads", []) if payload
+    ]
+
+
+def evaluate_sample(
+    sample: RetrievalSample,
+    top_k: int,
+    min_score: float,
+) -> RetrievalRecord:
+    try:
+        normalized_payloads, retrieval_payloads = _prepare_payloads(sample)
     except Exception as exc:
         return RetrievalRecord(
             dataset_index=sample.dataset_index,
@@ -209,7 +235,9 @@ def evaluate_sample(sample: RetrievalSample, top_k: int, min_score: float) -> Re
             true_label=sample.true_label,
             true_attack_type=sample.true_attack_type,
             payload_count=0,
+            retrieval_payload_count=0,
             normalized_payloads="[]",
+            retrieval_payloads="[]",
             top_k_returned=0,
             top1_score=None,
             relevant_hits=0,
@@ -227,7 +255,7 @@ def evaluate_sample(sample: RetrievalSample, top_k: int, min_score: float) -> Re
             error=str(exc),
         )
 
-    hits = collect_ranked_payload_hits(payloads, limit=max(top_k * 3, top_k))
+    hits = collect_ranked_payload_hits(retrieval_payloads, limit=max(top_k * 3, top_k))
     filtered_hits = [
         hit for hit in hits
         if float(hit.get("score", 0.0)) >= min_score
@@ -260,8 +288,10 @@ def evaluate_sample(sample: RetrievalSample, top_k: int, min_score: float) -> Re
         query_mode=sample.query_mode,
         true_label=sample.true_label,
         true_attack_type=sample.true_attack_type,
-        payload_count=len(payloads),
-        normalized_payloads=_json_compact(payloads),
+        payload_count=len(normalized_payloads),
+        retrieval_payload_count=len(retrieval_payloads),
+        normalized_payloads=_json_compact(normalized_payloads),
+        retrieval_payloads=_json_compact(retrieval_payloads),
         top_k_returned=len(filtered_hits),
         top1_score=float(filtered_hits[0]["score"]) if filtered_hits else None,
         relevant_hits=relevant_hits,
@@ -346,6 +376,7 @@ def summarize_records(
             "min_score": args.min_score,
             "benign_samples": args.benign_samples,
             "malicious_samples": args.malicious_samples,
+            "use_gatekeeper": True,
             "rag_enabled": settings.rag_enabled,
             "qdrant_collection": settings.qdrant_collection,
             "shuffle": args.shuffle,
@@ -435,6 +466,7 @@ def print_summary(summary: dict[str, Any]) -> None:
     print(f"  Malicious queries      : {counts['malicious_samples']}")
     print(f"  Benign queries         : {counts['benign_samples']}")
     print(f"  Errors                 : {counts['errors']}")
+    print(f"  Gatekeeper used        : {summary['config']['use_gatekeeper']}")
     print(f"  RAG enabled            : {summary['config']['rag_enabled']}")
     print(f"  Hit@{summary['config']['top_k']}           : {malicious['hit_at_k']:.4f}")
     print(f"  Precision@{summary['config']['top_k']}     : {malicious['precision_at_k']:.4f}")

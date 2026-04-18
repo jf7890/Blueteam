@@ -252,6 +252,12 @@ Main additions in this benchmark:
 
 This benchmark evaluates retrieval quality before the LLM reasons on the retrieved context.
 
+By default, the script follows the runtime retrieval path:
+
+- `preprocess`
+- `gatekeeper`
+- `RAG`
+
 ### Run with a local CSV
 
 ```bash
