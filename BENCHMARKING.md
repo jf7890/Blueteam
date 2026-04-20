@@ -216,16 +216,19 @@ python3 scripts/run_benchmark.py \
 ```bash
 cd /path/to/Blueteam-Agent
 source .venv/bin/activate
-python3 scripts/run_benchmark.py \
+python scripts/benchmark_rag.py \
   --dataset csv \
-  --data-file ./data/classification_eval.csv \
+  --data-file data/pkdd_request_level_eval.csv \
   --split train \
-  --request-column raw_http \
+  --query-column raw_http \
   --label-column label \
   --attack-type-column attack_type \
-  --benign-samples 200 \
-  --malicious-samples 200 \
-  --shuffle
+  --benign-samples 0 \
+  --malicious-samples 300 \
+  --top-k 3 \
+  --shuffle \
+  --seed 20260419 \
+  --output-dir data/Q1_4
 ```
 
 ### Outputs
