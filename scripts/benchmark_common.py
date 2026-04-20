@@ -18,6 +18,7 @@ REQUEST_COLUMN_CANDIDATES = [
     "requests",
     "raw_http",
     "raw_request",
+    "raw-request",
     "http_request",
 ]
 QUERY_COLUMN_CANDIDATES = [
@@ -25,6 +26,7 @@ QUERY_COLUMN_CANDIDATES = [
     "payload",
     "text",
     "content",
+    "raw-request",
 ]
 LABEL_COLUMN_CANDIDATES = [
     "label",
@@ -74,7 +76,9 @@ _ATTACK_TYPE_ALIASES = {
     "xml external entity": "XXE",
     "xml external entity attack": "XXE",
     "csrf": "CSRF",
+    "cross site request forgery": "CSRF",
     "ssrf": "SSRF",
+    "server side request forgery": "SSRF",
     "file upload": "File Upload",
     "lfi": "LFI",
     "local file inclusion": "LFI",
@@ -91,6 +95,11 @@ _ATTACK_TYPE_ALIASES = {
     "shellshock": "Shellshock",
     "shell shock": "Shellshock",
     "crlf injection": "CRLF Injection",
+    "html injection": "HTML Injection",
+    "open redirect": "Open Redirect",
+    "web cache deception": "Web Cache Deception",
+    "nosql injection": "NoSQL Injection",
+    "advanced vulnerability scan": "Advanced Vulnerability Scan",
     "parameter tampering": "Parameter Tampering",
     "information gathering": "Information Gathering",
     "buffer overflow": "Buffer Overflow",
