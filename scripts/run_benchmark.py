@@ -36,6 +36,7 @@ from benchmark_common import (  # noqa: E402
     pick_sample_id,
 )
 from config.settings import settings  # noqa: E402
+from nodes.gatekeeper_node import gatekeeper_node  # noqa: E402
 from nodes.preprocess import preprocess_node  # noqa: E402
 from nodes.rag_node import collect_ranked_payload_hits  # noqa: E402
 
@@ -491,7 +492,11 @@ def _build_retrieval_trace(raw_http: str, top_k: int) -> dict[str, Any]:
     trace = {
         "normalized_payloads": [],
         "retrieval_trace_origin": (
-            "benchmark_sidecar_disabled" if not settings.rag_enabled else "benchmark_sidecar"
+            "benchmark_sidecar_disabled"
+            if not settings.rag_enabled else (
+                "benchmark_sidecar_gatekeeper"
+                if settings.gatekeeper_enabled else "benchmark_sidecar_no_gatekeeper"
+            )
         ),
         "retrieved_topk_count": 0,
         "retrieved_topk_categories": [],
@@ -505,7 +510,19 @@ def _build_retrieval_trace(raw_http: str, top_k: int) -> dict[str, Any]:
         state = preprocess_node({"raw_http_text": raw_http})
         payloads = [payload for payload in state.get("normalized_payloads", []) if payload]
         trace["normalized_payloads"] = payloads
-        hits = collect_ranked_payload_hits(payloads, limit=max(top_k, 0)) if top_k > 0 else []
+        retrieval_payloads = payloads
+        if settings.gatekeeper_enabled:
+            gatekeeper_state = gatekeeper_node({"normalized_payloads": payloads})
+            retrieval_payloads = [
+                payload
+                for payload in gatekeeper_state.get("suspicious_payloads", [])
+                if payload
+            ]
+
+        hits = (
+            collect_ranked_payload_hits(retrieval_payloads, limit=max(top_k, 0))
+            if top_k > 0 else []
+        )
         trace["retrieved_topk_count"] = len(hits)
         trace["retrieved_topk_categories"] = [
             normalize_attack_type((hit.get("record") or {}).get("category")) or "Unknown"
@@ -896,6 +913,7 @@ def summarize_results(
             "retrieval_trace_enabled": not args.skip_retrieval_trace,
             "retrieval_trace_mode": "benchmark_sidecar",
             "rag_enabled": settings.rag_enabled,
+            "gatekeeper_enabled": settings.gatekeeper_enabled,
             "qdrant_collection": settings.qdrant_collection,
             "shuffle": args.shuffle,
             "seed": args.seed,
@@ -974,6 +992,7 @@ def print_summary(summary: dict[str, Any]) -> None:
     print(f"  Immediate path        : {counts['immediate_path']}")
     print(f"  Queued path           : {counts['queued_path']}")
     print(f"  RAG enabled           : {summary['config']['rag_enabled']}")
+    print(f"  Gatekeeper enabled    : {summary['config']['gatekeeper_enabled']}")
     print(f"  Throughput (RPS)      : {perf['throughput_rps']:.2f}")
     print(f"  Accuracy              : {eff['accuracy']:.4f}")
     print(f"  Precision             : {eff['precision']:.4f}")

@@ -54,6 +54,8 @@ Optional benchmark toggle:
 
 - `RAG_ENABLED=false` to disable retrieval cleanly
 - `NO_RAG=true` is supported as an inverse alias
+- `GATEKEEPER_ENABLED=false` to bypass Gatekeeper ML cleanly
+- `NO_GATEKEEPER=true` is supported as an inverse alias
 
 When RAG is disabled:
 
@@ -61,6 +63,13 @@ When RAG is disabled:
 - `rag_context` stays empty by design
 - benchmark summaries record `config.rag_enabled=false`
 - this is preferred over pointing to a fake collection name because it cleanly separates `no-RAG` from `collection not ready`
+
+When Gatekeeper is disabled:
+
+- the pipeline still runs normally
+- Gatekeeper no longer short-circuits benign requests
+- all normalized payloads pass through to downstream RAG / LLM steps
+- benchmark summaries record `config.gatekeeper_enabled=false`
 
 Important for Ubuntu host runs:
 
@@ -107,6 +116,12 @@ To run a `no-RAG` benchmark, export the flag before starting both the API and th
 
 ```bash
 export RAG_ENABLED=false
+```
+
+To run a `no-Gatekeeper` benchmark, export the flag before starting the API:
+
+```bash
+export GATEKEEPER_ENABLED=false
 ```
 
 If you use Docker for Redis, make sure Redis is reachable from the host. Example:

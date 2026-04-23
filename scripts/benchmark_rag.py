@@ -207,7 +207,11 @@ def _json_compact(value: Any) -> str:
 
 
 def _filter_with_gatekeeper(payloads: list[str]) -> list[str]:
+    if not settings.gatekeeper_enabled:
+        return payloads
+
     try:
+        from gatekeeper_ml import PayloadClassifier  # noqa: F401, E402
         from nodes.gatekeeper_node import gatekeeper_node  # noqa: E402
     except ModuleNotFoundError as exc:
         raise RuntimeError(
@@ -402,7 +406,8 @@ def summarize_records(
             "min_score": args.min_score,
             "benign_samples": args.benign_samples,
             "malicious_samples": args.malicious_samples,
-            "use_gatekeeper": True,
+            "use_gatekeeper": settings.gatekeeper_enabled,
+            "gatekeeper_enabled": settings.gatekeeper_enabled,
             "debug_enabled": settings.debug,
             "debug_csv_path": settings.debug_csv_path,
             "rag_enabled": settings.rag_enabled,
@@ -494,7 +499,7 @@ def print_summary(summary: dict[str, Any]) -> None:
     print(f"  Malicious queries      : {counts['malicious_samples']}")
     print(f"  Benign queries         : {counts['benign_samples']}")
     print(f"  Errors                 : {counts['errors']}")
-    print(f"  Gatekeeper used        : {summary['config']['use_gatekeeper']}")
+    print(f"  Gatekeeper enabled     : {summary['config']['gatekeeper_enabled']}")
     print(f"  Debug enabled          : {summary['config']['debug_enabled']}")
     print(f"  RAG enabled            : {summary['config']['rag_enabled']}")
     print(f"  Hit@{summary['config']['top_k']}           : {malicious['hit_at_k']:.4f}")

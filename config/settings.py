@@ -47,6 +47,19 @@ def _env_rag_enabled(default: bool = True) -> bool:
     return default
 
 
+def _env_gatekeeper_enabled(default: bool = True) -> bool:
+    """Resolve Gatekeeper enablement from environment variables."""
+    gatekeeper_enabled = _env_optional_flag("GATEKEEPER_ENABLED")
+    if gatekeeper_enabled is not None:
+        return gatekeeper_enabled
+
+    no_gatekeeper = _env_optional_flag("NO_GATEKEEPER")
+    if no_gatekeeper is not None:
+        return not no_gatekeeper
+
+    return default
+
+
 @dataclass(frozen=True, slots=True)
 class Settings:
     """Immutable application settings sourced from environment variables."""
@@ -89,6 +102,9 @@ class Settings:
     )
     rag_enabled: bool = field(
         default_factory=lambda: _env_rag_enabled(default=True)
+    )
+    gatekeeper_enabled: bool = field(
+        default_factory=lambda: _env_gatekeeper_enabled(default=True)
     )
 
     # --- Persistence / logging ------------------------------------------------
