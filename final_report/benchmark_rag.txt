@@ -1,0 +1,17 @@
+RAG retrieval benchmark summary
+  Total measured samples : 800
+  Malicious queries      : 700
+  Benign queries         : 100
+  Errors                 : 0
+  Gatekeeper enabled     : True
+  Debug enabled          : False
+  RAG enabled            : True
+  Hit@3           : 0.8300
+  Precision@3     : 0.5605
+  MRR                    : 0.7436
+  nDCG@3          : 0.7592
+  Benign context rate    : 0.8900
+  Benign mean top1 score : 0.5164
+
+Detailed results: data/main/benchmark_rag/rag_details_20260424_013958.csv
+Summary report  : data/main/benchmark_rag/rag_summary_20260424_013958.json

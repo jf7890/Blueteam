@@ -1,0 +1,1217 @@
+{
+  "timestamp": "2026-04-24T02:32:06.359538+00:00",
+  "dataset": "csv",
+  "split": "train",
+  "data_file": "data/final_clean_small_plus_cmdi_subset_balanced.csv",
+  "dataset_columns": {
+    "available": [
+      "attack_type",
+      "difficulty_bucket",
+      "difficulty_score",
+      "label",
+      "raw_request",
+      "request_id",
+      "request_len",
+      "sample_id",
+      "source_dataset",
+      "source_payload"
+    ],
+    "request_column": "raw_request",
+    "label_column": "label",
+    "attack_type_column": "attack_type",
+    "sample_id_column": "sample_id"
+  },
+  "base_api_url": "http://127.0.0.1:5000/api",
+  "config": {
+    "benign_samples": 100,
+    "malicious_samples": 700,
+    "warmup_samples": 0,
+    "concurrency": 8,
+    "poll_interval_seconds": 2.0,
+    "poll_timeout_seconds": 2400.0,
+    "request_timeout_seconds": 2400.0,
+    "retrieval_trace_top_k": 3,
+    "retrieval_trace_enabled": true,
+    "retrieval_trace_mode": "benchmark_sidecar",
+    "rag_enabled": false,
+    "gatekeeper_enabled": false,
+    "qdrant_collection": "waf",
+    "shuffle": true,
+    "seed": 42
+  },
+  "counts": {
+    "total_samples": 800,
+    "completed": 800,
+    "unresolved": 0,
+    "immediate_path": 275,
+    "queued_path": 525,
+    "warmup_samples": 0,
+    "true_label_distribution": {
+      "malicious": 700,
+      "benign": 100
+    },
+    "prediction_distribution": {
+      "malicious": 693,
+      "benign": 107
+    },
+    "initial_status_distribution": {
+      "200": 275,
+      "202": 525
+    },
+    "route_distribution": {
+      "immediate": 275,
+      "queued": 525
+    },
+    "source_distribution": {
+      "rule_engine": 275,
+      "llm_batch": 525
+    },
+    "true_attack_type_distribution": {
+      "Command Injection": 100,
+      "SQLi": 100,
+      "Path Traversal": 100,
+      "LDAP Injection": 100,
+      "XPath Injection": 100,
+      "XSS": 100,
+      "SSI": 100
+    },
+    "predicted_attack_type_distribution": {
+      "Command Injection": 155,
+      "SQLI RCE XSS": 1,
+      "SQLi": 78,
+      "Path Traversal": 106,
+      "RCE": 28,
+      "XPath Injection": 45,
+      "SQLI Xpath Injection": 3,
+      "SQLI Probe": 1,
+      "PATH Traversal RCE": 2,
+      "XSS": 92,
+      "AUTH Bypass LDAP Injection": 1,
+      "PATH Traversal SQLI": 1,
+      "SSI Injection": 52,
+      "AUTH Bypass": 6,
+      "SSI Injection RCE": 3,
+      "SQLI RCE": 5,
+      "Xpath Injection SQLI": 1,
+      "RCE LFI": 2,
+      "SSI Injection LFI": 2,
+      "Command Injection RCE": 1,
+      "SSII": 3,
+      "LDAP Injection": 48,
+      "SSI Injection PATH Traversal": 4,
+      "FILE Inclusion": 2,
+      "SSI": 2,
+      "Ldapi": 1,
+      "SQLI Xpathi": 2,
+      "AUTH Bypass Brute Force": 3,
+      "RCE SSI Injection": 1,
+      "SSRF Injection": 2,
+      "PATH Traversal FILE Inclusion": 1,
+      "Command Injection SQLI": 1,
+      "LDAP SQL Injection": 1,
+      "SSI Injection Information Disclosure": 1,
+      "SQL Injection RCE": 5,
+      "Injection": 2,
+      "Authentication Attack": 5,
+      "LFI": 1,
+      "RCE PATH Traversal": 1,
+      "PATH Traversal LFI": 1,
+      "Authentication Bypass": 8,
+      "SQL Injection Xpath Injection": 2,
+      "Xpathi": 3,
+      "SQLI LDAP Injection": 2,
+      "RCE SQL Injection": 2,
+      "SSRF Command Injection": 2,
+      "XSS Command Injection": 1,
+      "SQL Xpath Injection": 1
+    }
+  },
+  "effectiveness": {
+    "confusion_matrix": {
+      "tp": 650,
+      "tn": 57,
+      "fp": 43,
+      "fn": 50
+    },
+    "accuracy": 0.88375,
+    "precision": 0.937950937950938,
+    "recall": 0.9285714285714286,
+    "specificity": 0.57,
+    "false_positive_rate": 0.43,
+    "false_negative_rate": 0.07142857142857142,
+    "f1_score": 0.9332376166547022,
+    "resolved_samples": 800.0
+  },
+  "attack_type": {
+    "eligible_samples": 700,
+    "detected_as_malicious": 650,
+    "prediction_coverage": 0.9285714285714286,
+    "joint_exact_match_accuracy": 0.55,
+    "conditional_exact_match_accuracy": 0.5923076923076923,
+    "macro_f1": 0.6096777489807558,
+    "true_distribution": {
+      "Command Injection": 100,
+      "SQLi": 100,
+      "Path Traversal": 100,
+      "LDAP Injection": 100,
+      "XPath Injection": 100,
+      "XSS": 100,
+      "SSI": 100
+    },
+    "predicted_distribution": {
+      "Command Injection": 137,
+      "SQLI RCE XSS": 1,
+      "SQLi": 73,
+      "Path Traversal": 106,
+      "RCE": 20,
+      "XPath Injection": 45,
+      "SQLI Xpath Injection": 3,
+      "SQLI Probe": 1,
+      "__missed__": 50,
+      "PATH Traversal RCE": 2,
+      "XSS": 88,
+      "AUTH Bypass LDAP Injection": 1,
+      "PATH Traversal SQLI": 1,
+      "SSI Injection": 52,
+      "AUTH Bypass": 6,
+      "SSI Injection RCE": 3,
+      "SQLI RCE": 4,
+      "Xpath Injection SQLI": 1,
+      "SSI Injection LFI": 2,
+      "Command Injection RCE": 1,
+      "SSII": 3,
+      "LDAP Injection": 48,
+      "SSI Injection PATH Traversal": 4,
+      "FILE Inclusion": 1,
+      "SSI": 2,
+      "Ldapi": 1,
+      "SQLI Xpathi": 2,
+      "AUTH Bypass Brute Force": 3,
+      "RCE SSI Injection": 1,
+      "SSRF Injection": 2,
+      "PATH Traversal FILE Inclusion": 1,
+      "LDAP SQL Injection": 1,
+      "SSI Injection Information Disclosure": 1,
+      "SQL Injection RCE": 4,
+      "Injection": 2,
+      "Authentication Attack": 5,
+      "LFI": 1,
+      "RCE PATH Traversal": 1,
+      "PATH Traversal LFI": 1,
+      "Authentication Bypass": 8,
+      "SQL Injection Xpath Injection": 2,
+      "Xpathi": 3,
+      "SQLI LDAP Injection": 2,
+      "RCE SQL Injection": 1,
+      "SSRF Command Injection": 2,
+      "SQL Xpath Injection": 1
+    },
+    "confusion_matrix": {
+      "Command Injection": {
+        "Command Injection": 49,
+        "Command Injection RCE": 1,
+        "Injection": 2,
+        "RCE": 16,
+        "SQLI Probe": 1,
+        "SQLi": 1,
+        "__missed__": 30
+      },
+      "LDAP Injection": {
+        "AUTH Bypass": 6,
+        "AUTH Bypass Brute Force": 3,
+        "AUTH Bypass LDAP Injection": 1,
+        "Authentication Attack": 5,
+        "Authentication Bypass": 8,
+        "Command Injection": 11,
+        "LDAP Injection": 48,
+        "LDAP SQL Injection": 1,
+        "Ldapi": 1,
+        "PATH Traversal FILE Inclusion": 1,
+        "RCE": 3,
+        "SQLI LDAP Injection": 2,
+        "SQLi": 2,
+        "SSRF Command Injection": 2,
+        "SSRF Injection": 2,
+        "__missed__": 4
+      },
+      "Path Traversal": {
+        "Command Injection": 6,
+        "FILE Inclusion": 1,
+        "LFI": 1,
+        "PATH Traversal LFI": 1,
+        "PATH Traversal RCE": 2,
+        "PATH Traversal SQLI": 1,
+        "Path Traversal": 86,
+        "RCE PATH Traversal": 1,
+        "__missed__": 1
+      },
+      "SQLi": {
+        "Command Injection": 21,
+        "RCE SQL Injection": 1,
+        "SQL Injection RCE": 3,
+        "SQL Injection Xpath Injection": 1,
+        "SQLI RCE": 4,
+        "SQLI RCE XSS": 1,
+        "SQLi": 67,
+        "__missed__": 2
+      },
+      "SSI": {
+        "Command Injection": 5,
+        "Path Traversal": 20,
+        "RCE SSI Injection": 1,
+        "SQLi": 1,
+        "SSI": 2,
+        "SSI Injection": 52,
+        "SSI Injection Information Disclosure": 1,
+        "SSI Injection LFI": 2,
+        "SSI Injection PATH Traversal": 4,
+        "SSI Injection RCE": 3,
+        "SSII": 3,
+        "__missed__": 6
+      },
+      "XPath Injection": {
+        "Command Injection": 40,
+        "SQL Injection RCE": 1,
+        "SQL Injection Xpath Injection": 1,
+        "SQL Xpath Injection": 1,
+        "SQLI Xpath Injection": 3,
+        "SQLI Xpathi": 2,
+        "SQLi": 2,
+        "XPath Injection": 45,
+        "Xpath Injection SQLI": 1,
+        "Xpathi": 3,
+        "__missed__": 1
+      },
+      "XSS": {
+        "Command Injection": 5,
+        "RCE": 1,
+        "XSS": 88,
+        "__missed__": 6
+      }
+    },
+    "per_class": {
+      "Command Injection": {
+        "support": 100.0,
+        "precision": 0.35766423357664234,
+        "recall": 0.49,
+        "f1_score": 0.41350210970464135
+      },
+      "LDAP Injection": {
+        "support": 100.0,
+        "precision": 1.0,
+        "recall": 0.48,
+        "f1_score": 0.6486486486486487
+      },
+      "Path Traversal": {
+        "support": 100.0,
+        "precision": 0.8113207547169812,
+        "recall": 0.86,
+        "f1_score": 0.8349514563106797
+      },
+      "SQLi": {
+        "support": 100.0,
+        "precision": 0.9178082191780822,
+        "recall": 0.67,
+        "f1_score": 0.7745664739884393
+      },
+      "SSI": {
+        "support": 100.0,
+        "precision": 1.0,
+        "recall": 0.02,
+        "f1_score": 0.0392156862745098
+      },
+      "XPath Injection": {
+        "support": 100.0,
+        "precision": 1.0,
+        "recall": 0.45,
+        "f1_score": 0.6206896551724138
+      },
+      "XSS": {
+        "support": 100.0,
+        "precision": 1.0,
+        "recall": 0.88,
+        "f1_score": 0.9361702127659575
+      }
+    }
+  },
+  "llm_path_groundedness": {
+    "eligible_llm_samples": 525,
+    "eligible_malicious_samples": 440,
+    "label_accuracy": 0.8863636363636364,
+    "attack_type_accuracy": 0.5295454545454545,
+    "true_attack_type_in_topk_rate": 0.0,
+    "predicted_attack_type_in_topk_rate": 0.0,
+    "grounded_correct_rate": 0.0,
+    "examples_not_supported": [
+      {
+        "sample_id": "xml_test-41581",
+        "true_attack_type": "SQLi",
+        "predicted_attack_type": "SQLI RCE XSS",
+        "retrieved_topk_categories": []
+      },
+      {
+        "sample_id": "xml_test-35982",
+        "true_attack_type": "Path Traversal",
+        "predicted_attack_type": "Path Traversal",
+        "retrieved_topk_categories": []
+      },
+      {
+        "sample_id": "xml_test-37723",
+        "true_attack_type": "LDAP Injection",
+        "predicted_attack_type": "RCE",
+        "retrieved_topk_categories": []
+      },
+      {
+        "sample_id": "patt-xpath-injection-0463",
+        "true_attack_type": "XPath Injection",
+        "predicted_attack_type": "XPath Injection",
+        "retrieved_topk_categories": []
+      },
+      {
+        "sample_id": "xml_test-46606",
+        "true_attack_type": "XSS",
+        "predicted_attack_type": "RCE",
+        "retrieved_topk_categories": []
+      },
+      {
+        "sample_id": "xml_test-48465",
+        "true_attack_type": "XPath Injection",
+        "predicted_attack_type": "SQLI Xpath Injection",
+        "retrieved_topk_categories": []
+      },
+      {
+        "sample_id": "patt-command-injection-0910",
+        "true_attack_type": "Command Injection",
+        "predicted_attack_type": "SQLI Probe",
+        "retrieved_topk_categories": []
+      },
+      {
+        "sample_id": "patt-xpath-injection-0272",
+        "true_attack_type": "XPath Injection",
+        "predicted_attack_type": "XPath Injection",
+        "retrieved_topk_categories": []
+      },
+      {
+        "sample_id": "patt-command-injection-0806",
+        "true_attack_type": "Command Injection",
+        "predicted_attack_type": null,
+        "retrieved_topk_categories": []
+      },
+      {
+        "sample_id": "xml_test-46099",
+        "true_attack_type": "Path Traversal",
+        "predicted_attack_type": "PATH Traversal RCE",
+        "retrieved_topk_categories": []
+      },
+      {
+        "sample_id": "xml_test-46349",
+        "true_attack_type": "Path Traversal",
+        "predicted_attack_type": "Path Traversal",
+        "retrieved_topk_categories": []
+      },
+      {
+        "sample_id": "xml_test-46676",
+        "true_attack_type": "XSS",
+        "predicted_attack_type": "XSS",
+        "retrieved_topk_categories": []
+      },
+      {
+        "sample_id": "xml_test-41422",
+        "true_attack_type": "SQLi",
+        "predicted_attack_type": "SQLi",
+        "retrieved_topk_categories": []
+      },
+      {
+        "sample_id": "kaggle-cmdi-035",
+        "true_attack_type": "Command Injection",
+        "predicted_attack_type": null,
+        "retrieved_topk_categories": []
+      },
+      {
+        "sample_id": "patt-ldap-injection-0006",
+        "true_attack_type": "LDAP Injection",
+        "predicted_attack_type": "AUTH Bypass LDAP Injection",
+        "retrieved_topk_categories": []
+      },
+      {
+        "sample_id": "xml_test-46078",
+        "true_attack_type": "Path Traversal",
+        "predicted_attack_type": "PATH Traversal SQLI",
+        "retrieved_topk_categories": []
+      },
+      {
+        "sample_id": "patt-command-injection-0946",
+        "true_attack_type": "Command Injection",
+        "predicted_attack_type": "RCE",
+        "retrieved_topk_categories": []
+      },
+      {
+        "sample_id": "xml_test-41449",
+        "true_attack_type": "SQLi",
+        "predicted_attack_type": "SQLi",
+        "retrieved_topk_categories": []
+      },
+      {
+        "sample_id": "xml_test-40374",
+        "true_attack_type": "SSI",
+        "predicted_attack_type": "SSI Injection",
+        "retrieved_topk_categories": []
+      },
+      {
+        "sample_id": "xml_test-40372",
+        "true_attack_type": "SSI",
+        "predicted_attack_type": "SSI Injection",
+        "retrieved_topk_categories": []
+      }
+    ]
+  },
+  "effectiveness_by_source": {
+    "llm_batch": {
+      "name": "llm_batch",
+      "counts": {
+        "total_samples": 525,
+        "completed": 525,
+        "unresolved": 0
+      },
+      "effectiveness": {
+        "confusion_matrix": {
+          "tp": 390,
+          "tn": 57,
+          "fp": 28,
+          "fn": 50
+        },
+        "accuracy": 0.8514285714285714,
+        "precision": 0.9330143540669856,
+        "recall": 0.8863636363636364,
+        "specificity": 0.6705882352941176,
+        "false_positive_rate": 0.32941176470588235,
+        "false_negative_rate": 0.11363636363636363,
+        "f1_score": 0.9090909090909092,
+        "resolved_samples": 525.0
+      },
+      "attack_type": {
+        "eligible_samples": 440,
+        "detected_as_malicious": 390,
+        "prediction_coverage": 0.8863636363636364,
+        "joint_exact_match_accuracy": 0.5295454545454545,
+        "conditional_exact_match_accuracy": 0.5974358974358974,
+        "macro_f1": 0.6430004756194628,
+        "true_distribution": {
+          "SQLi": 71,
+          "Path Traversal": 62,
+          "LDAP Injection": 89,
+          "XPath Injection": 60,
+          "XSS": 22,
+          "Command Injection": 61,
+          "SSI": 75
+        },
+        "predicted_distribution": {
+          "SQLI RCE XSS": 1,
+          "Path Traversal": 54,
+          "RCE": 20,
+          "XPath Injection": 45,
+          "SQLI Xpath Injection": 3,
+          "SQLI Probe": 1,
+          "__missed__": 50,
+          "PATH Traversal RCE": 2,
+          "XSS": 15,
+          "SQLi": 65,
+          "AUTH Bypass LDAP Injection": 1,
+          "PATH Traversal SQLI": 1,
+          "SSI Injection": 52,
+          "AUTH Bypass": 6,
+          "SSI Injection RCE": 3,
+          "SQLI RCE": 4,
+          "Xpath Injection SQLI": 1,
+          "SSI Injection LFI": 2,
+          "Command Injection RCE": 1,
+          "SSII": 3,
+          "LDAP Injection": 48,
+          "SSI Injection PATH Traversal": 4,
+          "FILE Inclusion": 1,
+          "Command Injection": 10,
+          "SSI": 2,
+          "Ldapi": 1,
+          "SQLI Xpathi": 2,
+          "AUTH Bypass Brute Force": 3,
+          "RCE SSI Injection": 1,
+          "SSRF Injection": 2,
+          "PATH Traversal FILE Inclusion": 1,
+          "LDAP SQL Injection": 1,
+          "SSI Injection Information Disclosure": 1,
+          "SQL Injection RCE": 4,
+          "Injection": 2,
+          "Authentication Attack": 5,
+          "LFI": 1,
+          "RCE PATH Traversal": 1,
+          "PATH Traversal LFI": 1,
+          "Authentication Bypass": 8,
+          "SQL Injection Xpath Injection": 2,
+          "Xpathi": 3,
+          "SQLI LDAP Injection": 2,
+          "RCE SQL Injection": 1,
+          "SSRF Command Injection": 2,
+          "SQL Xpath Injection": 1
+        },
+        "confusion_matrix": {
+          "Command Injection": {
+            "Command Injection": 10,
+            "Command Injection RCE": 1,
+            "Injection": 2,
+            "RCE": 16,
+            "SQLI Probe": 1,
+            "SQLi": 1,
+            "__missed__": 30
+          },
+          "LDAP Injection": {
+            "AUTH Bypass": 6,
+            "AUTH Bypass Brute Force": 3,
+            "AUTH Bypass LDAP Injection": 1,
+            "Authentication Attack": 5,
+            "Authentication Bypass": 8,
+            "LDAP Injection": 48,
+            "LDAP SQL Injection": 1,
+            "Ldapi": 1,
+            "PATH Traversal FILE Inclusion": 1,
+            "RCE": 3,
+            "SQLI LDAP Injection": 2,
+            "SQLi": 2,
+            "SSRF Command Injection": 2,
+            "SSRF Injection": 2,
+            "__missed__": 4
+          },
+          "Path Traversal": {
+            "FILE Inclusion": 1,
+            "LFI": 1,
+            "PATH Traversal LFI": 1,
+            "PATH Traversal RCE": 2,
+            "PATH Traversal SQLI": 1,
+            "Path Traversal": 54,
+            "RCE PATH Traversal": 1,
+            "__missed__": 1
+          },
+          "SQLi": {
+            "RCE SQL Injection": 1,
+            "SQL Injection RCE": 3,
+            "SQL Injection Xpath Injection": 1,
+            "SQLI RCE": 4,
+            "SQLI RCE XSS": 1,
+            "SQLi": 59,
+            "__missed__": 2
+          },
+          "SSI": {
+            "RCE SSI Injection": 1,
+            "SQLi": 1,
+            "SSI": 2,
+            "SSI Injection": 52,
+            "SSI Injection Information Disclosure": 1,
+            "SSI Injection LFI": 2,
+            "SSI Injection PATH Traversal": 4,
+            "SSI Injection RCE": 3,
+            "SSII": 3,
+            "__missed__": 6
+          },
+          "XPath Injection": {
+            "SQL Injection RCE": 1,
+            "SQL Injection Xpath Injection": 1,
+            "SQL Xpath Injection": 1,
+            "SQLI Xpath Injection": 3,
+            "SQLI Xpathi": 2,
+            "SQLi": 2,
+            "XPath Injection": 45,
+            "Xpath Injection SQLI": 1,
+            "Xpathi": 3,
+            "__missed__": 1
+          },
+          "XSS": {
+            "RCE": 1,
+            "XSS": 15,
+            "__missed__": 6
+          }
+        },
+        "per_class": {
+          "Command Injection": {
+            "support": 61.0,
+            "precision": 1.0,
+            "recall": 0.16393442622950818,
+            "f1_score": 0.28169014084507044
+          },
+          "LDAP Injection": {
+            "support": 89.0,
+            "precision": 1.0,
+            "recall": 0.5393258426966292,
+            "f1_score": 0.7007299270072993
+          },
+          "Path Traversal": {
+            "support": 62.0,
+            "precision": 1.0,
+            "recall": 0.8709677419354839,
+            "f1_score": 0.9310344827586207
+          },
+          "SQLi": {
+            "support": 71.0,
+            "precision": 0.9076923076923077,
+            "recall": 0.8309859154929577,
+            "f1_score": 0.8676470588235293
+          },
+          "SSI": {
+            "support": 75.0,
+            "precision": 1.0,
+            "recall": 0.02666666666666667,
+            "f1_score": 0.05194805194805195
+          },
+          "XPath Injection": {
+            "support": 60.0,
+            "precision": 1.0,
+            "recall": 0.75,
+            "f1_score": 0.8571428571428571
+          },
+          "XSS": {
+            "support": 22.0,
+            "precision": 1.0,
+            "recall": 0.6818181818181818,
+            "f1_score": 0.8108108108108109
+          }
+        }
+      },
+      "latency": {
+        "count": 525.0,
+        "mean_ms": 455681.2475637542,
+        "median_ms": 450186.72436299676,
+        "min_ms": 35963.66449299967,
+        "p95_ms": 883051.0083749949,
+        "p99_ms": 907101.791962437,
+        "max_ms": 907166.0258679913
+      }
+    },
+    "rule_engine": {
+      "name": "rule_engine",
+      "counts": {
+        "total_samples": 275,
+        "completed": 275,
+        "unresolved": 0
+      },
+      "effectiveness": {
+        "confusion_matrix": {
+          "tp": 260,
+          "tn": 0,
+          "fp": 15,
+          "fn": 0
+        },
+        "accuracy": 0.9454545454545454,
+        "precision": 0.9454545454545454,
+        "recall": 1.0,
+        "specificity": 0.0,
+        "false_positive_rate": 1.0,
+        "false_negative_rate": 0.0,
+        "f1_score": 0.9719626168224299,
+        "resolved_samples": 275.0
+      },
+      "attack_type": {
+        "eligible_samples": 260,
+        "detected_as_malicious": 260,
+        "prediction_coverage": 1.0,
+        "joint_exact_match_accuracy": 0.5846153846153846,
+        "conditional_exact_match_accuracy": 0.5846153846153846,
+        "macro_f1": 0.36861578269062517,
+        "true_distribution": {
+          "Command Injection": 39,
+          "SQLi": 29,
+          "Path Traversal": 38,
+          "LDAP Injection": 11,
+          "SSI": 25,
+          "XSS": 78,
+          "XPath Injection": 40
+        },
+        "predicted_distribution": {
+          "Command Injection": 127,
+          "SQLi": 8,
+          "Path Traversal": 52,
+          "XSS": 73
+        },
+        "confusion_matrix": {
+          "Command Injection": {
+            "Command Injection": 39
+          },
+          "LDAP Injection": {
+            "Command Injection": 11
+          },
+          "Path Traversal": {
+            "Command Injection": 6,
+            "Path Traversal": 32
+          },
+          "SQLi": {
+            "Command Injection": 21,
+            "SQLi": 8
+          },
+          "SSI": {
+            "Command Injection": 5,
+            "Path Traversal": 20
+          },
+          "XPath Injection": {
+            "Command Injection": 40
+          },
+          "XSS": {
+            "Command Injection": 5,
+            "XSS": 73
+          }
+        },
+        "per_class": {
+          "Command Injection": {
+            "support": 39.0,
+            "precision": 0.30708661417322836,
+            "recall": 1.0,
+            "f1_score": 0.4698795180722892
+          },
+          "LDAP Injection": {
+            "support": 11.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1_score": 0.0
+          },
+          "Path Traversal": {
+            "support": 38.0,
+            "precision": 0.6153846153846154,
+            "recall": 0.8421052631578947,
+            "f1_score": 0.7111111111111111
+          },
+          "SQLi": {
+            "support": 29.0,
+            "precision": 1.0,
+            "recall": 0.27586206896551724,
+            "f1_score": 0.4324324324324324
+          },
+          "SSI": {
+            "support": 25.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1_score": 0.0
+          },
+          "XPath Injection": {
+            "support": 40.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1_score": 0.0
+          },
+          "XSS": {
+            "support": 78.0,
+            "precision": 1.0,
+            "recall": 0.9358974358974359,
+            "f1_score": 0.9668874172185431
+          }
+        }
+      },
+      "latency": {
+        "count": 275.0,
+        "mean_ms": 3311.4897246109003,
+        "median_ms": 3055.214314998011,
+        "min_ms": 79.25676999730058,
+        "p95_ms": 6776.497846096755,
+        "p99_ms": 7106.874953439401,
+        "max_ms": 7112.314760990557
+      }
+    }
+  },
+  "effectiveness_by_route": {
+    "immediate": {
+      "name": "immediate",
+      "counts": {
+        "total_samples": 275,
+        "completed": 275,
+        "unresolved": 0
+      },
+      "effectiveness": {
+        "confusion_matrix": {
+          "tp": 260,
+          "tn": 0,
+          "fp": 15,
+          "fn": 0
+        },
+        "accuracy": 0.9454545454545454,
+        "precision": 0.9454545454545454,
+        "recall": 1.0,
+        "specificity": 0.0,
+        "false_positive_rate": 1.0,
+        "false_negative_rate": 0.0,
+        "f1_score": 0.9719626168224299,
+        "resolved_samples": 275.0
+      },
+      "attack_type": {
+        "eligible_samples": 260,
+        "detected_as_malicious": 260,
+        "prediction_coverage": 1.0,
+        "joint_exact_match_accuracy": 0.5846153846153846,
+        "conditional_exact_match_accuracy": 0.5846153846153846,
+        "macro_f1": 0.36861578269062517,
+        "true_distribution": {
+          "Command Injection": 39,
+          "SQLi": 29,
+          "Path Traversal": 38,
+          "LDAP Injection": 11,
+          "SSI": 25,
+          "XSS": 78,
+          "XPath Injection": 40
+        },
+        "predicted_distribution": {
+          "Command Injection": 127,
+          "SQLi": 8,
+          "Path Traversal": 52,
+          "XSS": 73
+        },
+        "confusion_matrix": {
+          "Command Injection": {
+            "Command Injection": 39
+          },
+          "LDAP Injection": {
+            "Command Injection": 11
+          },
+          "Path Traversal": {
+            "Command Injection": 6,
+            "Path Traversal": 32
+          },
+          "SQLi": {
+            "Command Injection": 21,
+            "SQLi": 8
+          },
+          "SSI": {
+            "Command Injection": 5,
+            "Path Traversal": 20
+          },
+          "XPath Injection": {
+            "Command Injection": 40
+          },
+          "XSS": {
+            "Command Injection": 5,
+            "XSS": 73
+          }
+        },
+        "per_class": {
+          "Command Injection": {
+            "support": 39.0,
+            "precision": 0.30708661417322836,
+            "recall": 1.0,
+            "f1_score": 0.4698795180722892
+          },
+          "LDAP Injection": {
+            "support": 11.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1_score": 0.0
+          },
+          "Path Traversal": {
+            "support": 38.0,
+            "precision": 0.6153846153846154,
+            "recall": 0.8421052631578947,
+            "f1_score": 0.7111111111111111
+          },
+          "SQLi": {
+            "support": 29.0,
+            "precision": 1.0,
+            "recall": 0.27586206896551724,
+            "f1_score": 0.4324324324324324
+          },
+          "SSI": {
+            "support": 25.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1_score": 0.0
+          },
+          "XPath Injection": {
+            "support": 40.0,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1_score": 0.0
+          },
+          "XSS": {
+            "support": 78.0,
+            "precision": 1.0,
+            "recall": 0.9358974358974359,
+            "f1_score": 0.9668874172185431
+          }
+        }
+      },
+      "latency": {
+        "count": 275.0,
+        "mean_ms": 3311.4897246109003,
+        "median_ms": 3055.214314998011,
+        "min_ms": 79.25676999730058,
+        "p95_ms": 6776.497846096755,
+        "p99_ms": 7106.874953439401,
+        "max_ms": 7112.314760990557
+      }
+    },
+    "queued": {
+      "name": "queued",
+      "counts": {
+        "total_samples": 525,
+        "completed": 525,
+        "unresolved": 0
+      },
+      "effectiveness": {
+        "confusion_matrix": {
+          "tp": 390,
+          "tn": 57,
+          "fp": 28,
+          "fn": 50
+        },
+        "accuracy": 0.8514285714285714,
+        "precision": 0.9330143540669856,
+        "recall": 0.8863636363636364,
+        "specificity": 0.6705882352941176,
+        "false_positive_rate": 0.32941176470588235,
+        "false_negative_rate": 0.11363636363636363,
+        "f1_score": 0.9090909090909092,
+        "resolved_samples": 525.0
+      },
+      "attack_type": {
+        "eligible_samples": 440,
+        "detected_as_malicious": 390,
+        "prediction_coverage": 0.8863636363636364,
+        "joint_exact_match_accuracy": 0.5295454545454545,
+        "conditional_exact_match_accuracy": 0.5974358974358974,
+        "macro_f1": 0.6430004756194628,
+        "true_distribution": {
+          "SQLi": 71,
+          "Path Traversal": 62,
+          "LDAP Injection": 89,
+          "XPath Injection": 60,
+          "XSS": 22,
+          "Command Injection": 61,
+          "SSI": 75
+        },
+        "predicted_distribution": {
+          "SQLI RCE XSS": 1,
+          "Path Traversal": 54,
+          "RCE": 20,
+          "XPath Injection": 45,
+          "SQLI Xpath Injection": 3,
+          "SQLI Probe": 1,
+          "__missed__": 50,
+          "PATH Traversal RCE": 2,
+          "XSS": 15,
+          "SQLi": 65,
+          "AUTH Bypass LDAP Injection": 1,
+          "PATH Traversal SQLI": 1,
+          "SSI Injection": 52,
+          "AUTH Bypass": 6,
+          "SSI Injection RCE": 3,
+          "SQLI RCE": 4,
+          "Xpath Injection SQLI": 1,
+          "SSI Injection LFI": 2,
+          "Command Injection RCE": 1,
+          "SSII": 3,
+          "LDAP Injection": 48,
+          "SSI Injection PATH Traversal": 4,
+          "FILE Inclusion": 1,
+          "Command Injection": 10,
+          "SSI": 2,
+          "Ldapi": 1,
+          "SQLI Xpathi": 2,
+          "AUTH Bypass Brute Force": 3,
+          "RCE SSI Injection": 1,
+          "SSRF Injection": 2,
+          "PATH Traversal FILE Inclusion": 1,
+          "LDAP SQL Injection": 1,
+          "SSI Injection Information Disclosure": 1,
+          "SQL Injection RCE": 4,
+          "Injection": 2,
+          "Authentication Attack": 5,
+          "LFI": 1,
+          "RCE PATH Traversal": 1,
+          "PATH Traversal LFI": 1,
+          "Authentication Bypass": 8,
+          "SQL Injection Xpath Injection": 2,
+          "Xpathi": 3,
+          "SQLI LDAP Injection": 2,
+          "RCE SQL Injection": 1,
+          "SSRF Command Injection": 2,
+          "SQL Xpath Injection": 1
+        },
+        "confusion_matrix": {
+          "Command Injection": {
+            "Command Injection": 10,
+            "Command Injection RCE": 1,
+            "Injection": 2,
+            "RCE": 16,
+            "SQLI Probe": 1,
+            "SQLi": 1,
+            "__missed__": 30
+          },
+          "LDAP Injection": {
+            "AUTH Bypass": 6,
+            "AUTH Bypass Brute Force": 3,
+            "AUTH Bypass LDAP Injection": 1,
+            "Authentication Attack": 5,
+            "Authentication Bypass": 8,
+            "LDAP Injection": 48,
+            "LDAP SQL Injection": 1,
+            "Ldapi": 1,
+            "PATH Traversal FILE Inclusion": 1,
+            "RCE": 3,
+            "SQLI LDAP Injection": 2,
+            "SQLi": 2,
+            "SSRF Command Injection": 2,
+            "SSRF Injection": 2,
+            "__missed__": 4
+          },
+          "Path Traversal": {
+            "FILE Inclusion": 1,
+            "LFI": 1,
+            "PATH Traversal LFI": 1,
+            "PATH Traversal RCE": 2,
+            "PATH Traversal SQLI": 1,
+            "Path Traversal": 54,
+            "RCE PATH Traversal": 1,
+            "__missed__": 1
+          },
+          "SQLi": {
+            "RCE SQL Injection": 1,
+            "SQL Injection RCE": 3,
+            "SQL Injection Xpath Injection": 1,
+            "SQLI RCE": 4,
+            "SQLI RCE XSS": 1,
+            "SQLi": 59,
+            "__missed__": 2
+          },
+          "SSI": {
+            "RCE SSI Injection": 1,
+            "SQLi": 1,
+            "SSI": 2,
+            "SSI Injection": 52,
+            "SSI Injection Information Disclosure": 1,
+            "SSI Injection LFI": 2,
+            "SSI Injection PATH Traversal": 4,
+            "SSI Injection RCE": 3,
+            "SSII": 3,
+            "__missed__": 6
+          },
+          "XPath Injection": {
+            "SQL Injection RCE": 1,
+            "SQL Injection Xpath Injection": 1,
+            "SQL Xpath Injection": 1,
+            "SQLI Xpath Injection": 3,
+            "SQLI Xpathi": 2,
+            "SQLi": 2,
+            "XPath Injection": 45,
+            "Xpath Injection SQLI": 1,
+            "Xpathi": 3,
+            "__missed__": 1
+          },
+          "XSS": {
+            "RCE": 1,
+            "XSS": 15,
+            "__missed__": 6
+          }
+        },
+        "per_class": {
+          "Command Injection": {
+            "support": 61.0,
+            "precision": 1.0,
+            "recall": 0.16393442622950818,
+            "f1_score": 0.28169014084507044
+          },
+          "LDAP Injection": {
+            "support": 89.0,
+            "precision": 1.0,
+            "recall": 0.5393258426966292,
+            "f1_score": 0.7007299270072993
+          },
+          "Path Traversal": {
+            "support": 62.0,
+            "precision": 1.0,
+            "recall": 0.8709677419354839,
+            "f1_score": 0.9310344827586207
+          },
+          "SQLi": {
+            "support": 71.0,
+            "precision": 0.9076923076923077,
+            "recall": 0.8309859154929577,
+            "f1_score": 0.8676470588235293
+          },
+          "SSI": {
+            "support": 75.0,
+            "precision": 1.0,
+            "recall": 0.02666666666666667,
+            "f1_score": 0.05194805194805195
+          },
+          "XPath Injection": {
+            "support": 60.0,
+            "precision": 1.0,
+            "recall": 0.75,
+            "f1_score": 0.8571428571428571
+          },
+          "XSS": {
+            "support": 22.0,
+            "precision": 1.0,
+            "recall": 0.6818181818181818,
+            "f1_score": 0.8108108108108109
+          }
+        }
+      },
+      "latency": {
+        "count": 525.0,
+        "mean_ms": 455681.2475637542,
+        "median_ms": 450186.72436299676,
+        "min_ms": 35963.66449299967,
+        "p95_ms": 883051.0083749949,
+        "p99_ms": 907101.791962437,
+        "max_ms": 907166.0258679913
+      }
+    }
+  },
+  "performance": {
+    "wall_clock_seconds": 907.1774097049929,
+    "throughput_rps": 0.881856174372942,
+    "overall_latency": {
+      "count": 800.0,
+      "mean_ms": 300179.1433065487,
+      "median_ms": 231981.96780850412,
+      "min_ms": 79.25676999730058,
+      "p95_ms": 850305.939433747,
+      "p99_ms": 907089.5575659537,
+      "max_ms": 907166.0258679913
+    },
+    "immediate_latency": {
+      "count": 275.0,
+      "mean_ms": 3311.4897246109003,
+      "median_ms": 3055.214314998011,
+      "min_ms": 79.25676999730058,
+      "p95_ms": 6776.497846096755,
+      "p99_ms": 7106.874953439401,
+      "max_ms": 7112.314760990557
+    },
+    "queued_latency": {
+      "count": 525.0,
+      "mean_ms": 455681.2475637542,
+      "median_ms": 450186.72436299676,
+      "min_ms": 35963.66449299967,
+      "p95_ms": 883051.0083749949,
+      "p99_ms": 907101.791962437,
+      "max_ms": 907166.0258679913
+    },
+    "latency_by_source": {
+      "llm_batch": {
+        "count": 525.0,
+        "mean_ms": 455681.2475637542,
+        "median_ms": 450186.72436299676,
+        "min_ms": 35963.66449299967,
+        "p95_ms": 883051.0083749949,
+        "p99_ms": 907101.791962437,
+        "max_ms": 907166.0258679913
+      },
+      "rule_engine": {
+        "count": 275.0,
+        "mean_ms": 3311.4897246109003,
+        "median_ms": 3055.214314998011,
+        "min_ms": 79.25676999730058,
+        "p95_ms": 6776.497846096755,
+        "p99_ms": 7106.874953439401,
+        "max_ms": 7112.314760990557
+      }
+    }
+  },
+  "failures": {
+    "count": 0,
+    "examples": []
+  }
+}

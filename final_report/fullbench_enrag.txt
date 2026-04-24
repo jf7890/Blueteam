@@ -1,0 +1,39 @@
+Classification benchmark summary
+  Total measured samples : 800
+  Completed             : 800
+  Unresolved            : 0
+  Immediate path        : 314
+  Queued path           : 486
+  RAG enabled           : True
+  Gatekeeper enabled    : True
+  Throughput (RPS)      : 0.80
+  Accuracy              : 0.8838
+  Precision             : 0.9510
+  Recall                : 0.9143
+  F1-score              : 0.9323
+  FPR / FNR             : 0.3300 / 0.0857
+  Avg latency           : 348864.67 ms
+  P95 latency           : 925269.38 ms
+
+Attack-type summary
+  Eligible malicious    : 700
+  Joint exact match     : 0.7486
+  Conditional exact     : 0.8187
+  Macro-F1              : 0.7955
+  Coverage              : 0.9143
+
+LLM-path groundedness
+  Eligible malicious    : 414
+  Label accuracy        : 0.9179
+  Attack-type accuracy  : 0.8986
+  True type in top-k    : 0.8261
+  Pred type in top-k    : 0.7899
+  Grounded correct      : 0.7826
+
+Per-source effectiveness
+  gatekeeper_ml      total=37    acc=0.2973 prec=0.0000 rec=0.0000 f1=0.0000
+  llm_batch          total=488   acc=0.8934 prec=0.9548 rec=0.9179 f1=0.9360
+  rule_engine        total=275   acc=0.9455 prec=0.9455 rec=1.0000 f1=0.9720
+
+Detailed results: data/main/fullbench_enrag/classification_details_20260424_020813.csv
+Summary report  : data/main/fullbench_enrag/classification_summary_20260424_020813.json
