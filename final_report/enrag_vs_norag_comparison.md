@@ -4,6 +4,25 @@ Sources:
 - `final_report/fullbench_enrag/classification_summary_20260424_020813.json`
 - `final_report/fullbench_norag/classification_summary_20260424_023206.json`
 
+## Compact Summary
+
+Delta = `RAG - no_RAG`
+
+| Metric | RAG | no_RAG | Delta |
+|---|---:|---:|---:|
+| Accuracy | `0.8838` | `0.8838` | `+0.0000` |
+| Precision | `0.9510` | `0.9380` | `+0.0130` |
+| Recall | `0.9143` | `0.9286` | `-0.0143` |
+| F1-score | `0.9323` | `0.9332` | `-0.0010` |
+| FPR | `0.3300` | `0.4300` | `-0.1000` |
+| FNR | `0.0857` | `0.0714` | `+0.0143` |
+| Joint exact match | `0.7486` | `0.5500` | `+0.1986` |
+| Conditional exact | `0.8188` | `0.5923` | `+0.2264` |
+| Macro-F1 | `0.7955` | `0.6097` | `+0.1859` |
+| Coverage | `0.9143` | `0.9286` | `-0.0143` |
+
+## Detailed Comparison
+
 | Group | Metric | `enrag` | `no_rag` | Better | Notes |
 |---|---|---:|---:|---|---|
 | Overall | Accuracy | 88.38% | 88.38% | `=` | Overall binary performance is effectively tied |
